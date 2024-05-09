@@ -1,0 +1,21 @@
+@startuml
+
+actor Клиент as client
+
+boundary "Список ремонтных работ" as list_repairs_screen
+boundary "Уведомление об успешном\n добавлении" as added_info_screen #green
+
+entity "База данных" as db
+
+boundary "Окно ошибки" as error_screen #red
+
+client -> list_repairs_screen : Выбирает\nстанок и услугу
+client -> list_repairs_screen : Нажимает кнопку\n"Заказать"
+list_repairs_screen -> db : Создать запись\nзаказа
+alt добавлена
+  list_repairs_screen -> added_info_screen : показать сообщение
+else не удалось добавить
+  list_repairs_screen -> error_screen : показать сообщение
+end
+
+@enduml

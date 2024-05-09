@@ -1,0 +1,80 @@
+@startuml
+
+hide empty members
+
+enum UserRole {
+  Admin
+  Client
+  Worker
+}
+class DB {
+   + Users GetUserByLogin(login)
+   + List[Machines] GetMachinesByUser(id)
+   + List[Repairs] GetRepairsByMachine(id)
+   + List[Types] GetBrandsTypes()
+   + List[Brands] GetBrandsByType(id)
+   + CreateOrder(Orders)
+   + CreateMachine(Users, Machins)
+}
+class AuthWindow {
+   + AuthButtonClick()
+   + UserRole CheckAuth(login, password)
+}
+
+Entity Users
+Entity Machines
+Entity Repairs
+Entity Brands
+Entity Types
+
+Interface PersonalAreaWindow {
+  + PersonalAreaWindow(Users)
+  + LogoutButtonClick()
+}
+
+class ClientAreaWindow {
+  + RepairsButtonClick()
+  + MyMachinesButtonClick()
+  + LogoutButtonClick()
+}
+
+class ClientMachinesWindow {
+  + ClientMachinesWindow(Users)
+  + AddMachineButtonClick()
+  + GoToAreaButtonClick()
+}
+
+class ClientRepairsWindow {
+  + ClientRepairsWindow(Users)
+  + InputMachineSelect()
+  + InputRepairSelect()
+  + OrderButtonClick()
+  + GoToAreaButtonClick()
+}
+
+class AddMachineWindow {
+  + ClientRepairsWindow(Users)
+  + GoToAreaButtonClick()
+  + InputTypeSelect()
+  + InputBrandSelect()
+  + bool CheckName()
+}
+
+AuthWindow --> DB
+DB --> Users
+DB --> Machines
+DB --> Repairs
+DB --> Brands
+DB --> Types
+AuthWindow --> UserRole
+AuthWindow <--> PersonalAreaWindow
+ClientAreaWindow --|> PersonalAreaWindow
+ClientAreaWindow <--> ClientMachinesWindow
+ClientAreaWindow <--> ClientRepairsWindow
+AddMachineWindow --> ClientAreaWindow
+ClientMachinesWindow --> AddMachineWindow
+ClientMachinesWindow --> DB
+AddMachineWindow --> DB
+ClientRepairsWindow --> DB
+
+@enduml

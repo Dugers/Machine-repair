@@ -1,0 +1,46 @@
+@startuml
+
+actor Рабочий as worker
+
+entity "База данных" as db
+
+boundary "Завершение заказа" as close_order_screen
+boundary "Список активных заказов" as active_orders_screen
+boundary "Подтверждение завершения заказа" as confirm_close_order_screen
+
+control "Отображение окна завершение заказа" as show_close_order_screen
+control "Выдать ошибку" as show_error #red
+control "Проверить корректность описания" as check_description
+control "Завершить заказ" as close_order #green
+
+active_orders_screen --> show_close_order_screen : "Пользователь выбрал заказ и нажал\nкнопку завершить заказ"
+show_close_order_screen --> close_order_screen
+show_close_order_screen --> show_error : "Заказ уже завершен"
+close_order_screen --> check_description : "Пользователь нажал завершить заказ"
+check_description --> confirm_close_order_screen : "Описание соответствует требованиям"
+confirm_close_order_screen --> close_order : "Пользователь нажал Да"
+check_description --> show_error
+confirm_close_order_screen --> show_close_order_screen : "Пользователь нажал Нет"
+close_order --> show_error
+
+worker --> active_orders_screen
+
+close_order --> db
+show_close_order_screen --> db
+
+note as scenario
+Перед выполнением прецедента
+рабочий имеет как минимум
+1 не завершенный, активный заказ
+Главная последовательность:
+    1) Пользователь переходит в окно
+       Список активных заказов
+    2) Выбирает нужный заказ и нажимает
+       завершить заказ
+    3) Описывает проделанную работу и
+       нажимает завершить заказ
+    4) Подтверждает завершение
+end note
+
+
+@enduml

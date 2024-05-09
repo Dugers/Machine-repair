@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>EditUserWindow</class>
+ <widget class="QWidget" name="EditUserWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>751</width>
+    <height>507</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="palette">
+   <palette>
+    <active/>
+    <inactive/>
+    <disabled/>
+   </palette>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <widget class="QPushButton" name="go_area_button">
+   <property name="geometry">
+    <rect>
+     <x>410</x>
+     <y>430</y>
+     <width>291</width>
+     <height>51</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Inter</family>
+     <pointsize>16</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>Личный кабинет</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="user_login_label">
+   <property name="geometry">
+    <rect>
+     <x>50</x>
+     <y>200</y>
+     <width>151</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Inter</family>
+     <pointsize>16</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>Логин</string>
+   </property>
+   <property name="margin">
+    <number>0</number>
+   </property>
+  </widget>
+  <widget class="QLabel" name="user_role_label">
+   <property name="geometry">
+    <rect>
+     <x>50</x>
+     <y>350</y>
+     <width>101</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Inter</family>
+     <pointsize>16</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>Роль</string>
+   </property>
+   <property name="margin">
+    <number>0</number>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="user_name_line_edit">
+   <property name="geometry">
+    <rect>
+     <x>260</x>
+     <y>120</y>
+     <width>441</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Inter</family>
+     <pointsize>16</pointsize>
+    </font>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="user_password_line_edit">
+   <property name="geometry">
+    <rect>
+     <x>260</x>
+     <y>280</y>
+     <width>441</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Inter</family>
+     <pointsize>16</pointsize>
+    </font>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="user_login_line_edit">
+   <property name="geometry">
+    <rect>
+     <x>260</x>
+     <y>200</y>
+     <width>441</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Inter</family>
+     <pointsize>16</pointsize>
+    </font>
+   </property>
+  </widget>
+  <widget class="QLabel" name="user_name_label">
+   <property name="geometry">
+    <rect>
+     <x>50</x>
+     <y>120</y>
+     <width>131</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Inter</family>
+     <pointsize>16</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>Имя</string>
+   </property>
+   <property name="margin">
+    <number>0</number>
+   </property>
+  </widget>
+  <widget class="QLabel" name="user_password_label">
+   <property name="geometry">
+    <rect>
+     <x>50</x>
+     <y>280</y>
+     <width>191</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Inter</family>
+     <pointsize>16</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>Новый пароль</string>
+   </property>
+   <property name="margin">
+    <number>0</number>
+   </property>
+  </widget>
+  <widget class="QComboBox" name="user_role_combo_box">
+   <property name="geometry">
+    <rect>
+     <x>260</x>
+     <y>350</y>
+     <width>441</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Inter</family>
+     <pointsize>16</pointsize>
+    </font>
+   </property>
+   <property name="currentText">
+    <string/>
+   </property>
+   <property name="placeholderText">
+    <string>Роль</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="add_user_label">
+   <property name="geometry">
+    <rect>
+     <x>170</x>
+     <y>30</y>
+     <width>541</width>
+     <height>45</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Inter</family>
+     <pointsize>22</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>Редактировать пользователя</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="add_button">
+   <property name="geometry">
+    <rect>
+     <x>40</x>
+     <y>430</y>
+     <width>291</width>
+     <height>51</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Inter</family>
+     <pointsize>16</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>Сохранить</string>
+   </property>
+  </widget>
+  <zorder>user_login_label</zorder>
+  <zorder>user_role_label</zorder>
+  <zorder>user_name_label</zorder>
+  <zorder>user_password_label</zorder>
+  <zorder>add_user_label</zorder>
+  <zorder>user_name_line_edit</zorder>
+  <zorder>user_password_line_edit</zorder>
+  <zorder>user_role_combo_box</zorder>
+  <zorder>add_button</zorder>
+  <zorder>user_login_line_edit</zorder>
+  <zorder>go_area_button</zorder>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

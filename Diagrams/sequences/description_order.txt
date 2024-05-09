@@ -1,0 +1,28 @@
+@startuml
+actor Работник as worker
+
+boundary "Окно" as window_screen
+boundary "Подробности о заказе" as order_description_screen #green
+boundary "Окно ошибки" as error_screen #red
+
+entity "База данных" as db
+
+ref over worker, window_screen
+Открыто "Окно":
+Список доступных заказов
+Список активных заказов
+Список работ для станка
+end ref
+
+worker -> window_screen : Нажать кнопку\n"Подробности"
+window_screen -> db : Получить информацию\nо заказе
+
+entity "База данных" as db
+
+alt успех
+  window_screen -> order_description_screen : Открыть окно
+else произошла ошибка
+  window_screen -> error_screen : Показать сообщение
+end
+
+@enduml

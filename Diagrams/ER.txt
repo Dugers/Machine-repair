@@ -1,0 +1,82 @@
+@startuml
+entity users {
+  id: serial PRIMARY KEY
+  --
+  name: text
+  login: text
+  password: text
+  role: user_role
+}
+entity machine_types {
+  id: serial PRIMARY KEY
+  --
+  name: text
+}
+
+entity machine_brands {
+  * id: serial PRIMARY KEY
+  --
+  name: text
+}
+
+entity machines {
+  id: serial PRIMARY KEY
+  --
+  name: text
+  owner: serial
+  type_and_brand: serial
+}
+
+entity type_to_brand {
+  id: serial PRIMARY KEY
+  --
+  type: serial
+  brand: serial
+}
+
+entity type_and_brand_to_service{
+  id: serial PRIMARY KEY
+  --
+  service: serial
+  type_and_brand: serial
+}
+
+entity services {
+  id: serial PRIMARY KEY
+  --
+  name: text
+}
+
+entity orders {
+  * id: serial PRIMARY KEY
+  --
+  date_start: date
+  date_finish: date
+  complete: boolean DEFAULT false
+  description: text DEFAULT NULL
+  customer: serial
+  executor: serial DEFAULT NULL
+  machine: serial
+  service: serial
+}
+
+enum user_role {
+  role
+  --Possible values--
+  * Client
+  * Worker
+  * Admin
+}
+
+
+users||--o{user_role
+users||--o{orders
+machines ||--o{ type_to_brand
+machines ||--o{ users
+orders ||-o{ services
+type_to_brand ||-o{ machine_types
+type_to_brand ||-o{ machine_brands
+type_to_brand |o-|{ type_and_brand_to_service
+services |o-|{ type_and_brand_to_service
+
+@enduml

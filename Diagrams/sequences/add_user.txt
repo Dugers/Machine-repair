@@ -1,0 +1,35 @@
+@startuml
+
+actor Администратор as admin
+
+boundary "Добавление пользователя" as add_user_screen
+
+control "Сгенерировать логин" as generate_login
+control "Сгенерировать пароль" as generate_password
+
+entity "База данных" as db
+
+boundary "Уведомление о успешном\n добавлении" as added_info_screen #green
+boundary "Окно ошибки" as error_screen #red
+
+admin -> add_user_screen : Вводит ФИО и выбирает роль\nВвод логина и пароля\nпо желанию
+admin -> add_user_screen : Нажимает кнопку Добавить
+alt был введен логин
+  add_user_screen -> db : Проверить наличие\nтакого пользователя
+  alt такой пользователь существует
+    add_user_screen -> error_screen : показать сообщение\n
+    end
+else логин не был введен
+  add_user_screen -> generate_login : создать логин\nна основе ФИО
+  generate_login -> db : проверяет, не занят\nли такой логин
+end
+alt пароль не был введен
+  add_user_screen -> generate_password : сгенерировать\nпароль
+end
+alt введенный или сгенерированный\nсоответствует требованиям
+  add_user_screen -> db : добавить пользователя
+  add_user_screen -> added_info_screen : показать сообщение
+else
+  add_user_screen -> error_screen : показать сообщение
+end
+@enduml

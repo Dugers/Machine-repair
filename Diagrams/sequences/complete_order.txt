@@ -1,0 +1,27 @@
+@startuml
+
+actor Рабочий as worker
+
+boundary "Завершение заказа" as close_order_screen
+boundary "Подтверждение завершения\n заказа" as confirm_close_order_screen
+entity "База данных" as db
+boundary "Уведомление о успешном\n завершении" as close_info_screen #green
+boundary "Окно ошибки" as error_screen #red
+
+worker -> close_order_screen : Заполняет описание\nпроделанной работы
+worker -> close_order_screen : Нажимает кнопку\n"Завершить заказ"
+alt Описание подходит требованиям
+close_order_screen -> confirm_close_order_screen : открыть окно
+else Описание слишком короткое
+close_order_screen -> error_screen : показать сообщение
+end
+alt действие подтверждено
+  confirm_close_order_screen -> db : изменить статус\nзаказа и добавить\nописание
+  confirm_close_order_screen -> close_info_screen : показать сообщение
+else действие отклонено
+  confirm_close_order_screen --> close_order_screen : возврат
+else произошла ошибка
+  confirm_close_order_screen --> error_screen : показать сообщение
+end
+
+@enduml

@@ -1,0 +1,39 @@
+@startuml
+
+actor Работник as worker
+
+entity "База данных" as db
+
+boundary "Список доступных заказов" as list_available_repairs_screen
+boundary "Список активных заказов" as list_active_repairs_screen
+boundary "Подробности о заказе" as order_description_screen #green
+boundary "Список работ для станка" as repairs_history_screen
+
+worker --> list_available_repairs_screen
+worker --> list_active_repairs_screen
+worker --> repairs_history_screen
+
+control "Отобразить окно подробностей о заказе" as show_description_screen
+control "Выдать ошибку" as show_error #red
+
+
+repairs_history_screen --> show_description_screen : "Нажата кнопка Подробности"
+list_available_repairs_screen --> show_description_screen : "Нажата кнопка Подробности"
+list_active_repairs_screen --> show_description_screen : "Нажата кнопка Подробности"
+show_description_screen --> db
+show_description_screen --> order_description_screen
+show_description_screen --> show_error
+
+note as scenario
+Перед выполнением прецедента
+работник взял или в доступных
+заказах имеется как минимум 1
+заказ
+Главная последовательность:
+    1) Пользователь выбирает интересующий
+       его заказ на одном из окон
+    2) Нажимает кнопку Подробности        
+end note
+
+
+@enduml
