@@ -74,3 +74,8 @@ Thumbs.db
 # config files
 
 config.cpp
+
+# study files
+
+*.docx
+*.doc
