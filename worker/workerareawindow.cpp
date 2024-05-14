@@ -2,7 +2,7 @@
 #include "ui_workerareawindow.h"
 #include "aviableorderslistwindow.h"
 #include "activeorderslistwindow.h"
-#include "../authwindow_.h"
+#include "../authwindow.h"
 
 WorkerAreaWindow::WorkerAreaWindow(const int& user_id, QWidget *parent) :
     QWidget(parent),
