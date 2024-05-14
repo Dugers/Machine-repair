@@ -28,6 +28,7 @@ SOURCES += \
     entities/service.cpp \
     entities/user.cpp \
     main.cpp \
+    messages.cpp \
     models/connections.cpp \
     models/create.cpp \
     models/delete.cpp \
@@ -58,6 +59,7 @@ HEADERS += \
     entities/relationship_wrapper.h \
     entities/service.h \
     entities/user.h \
+    messages.h \
     models/db.h \
     worker/aboutmachinewindow.h \
     worker/aboutorderwindow.h \

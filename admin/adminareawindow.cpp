@@ -2,7 +2,7 @@
 #include "ui_adminareawindow.h"
 #include "listuserswindow.h"
 #include "adduserwindow.h"
-#include "../authwindow_.h"
+#include "../authwindow.h"
 #include <QCloseEvent>
 
 AdminAreaWindow::AdminAreaWindow(const int& user_id, QWidget *parent) :

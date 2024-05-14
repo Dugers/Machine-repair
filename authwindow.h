@@ -26,6 +26,8 @@ private slots:
 
     void on_drop_action_triggered();
 
+    void open_user_window(UserRole role);
+
 private:
     Ui::AuthWindow *ui;
 };
