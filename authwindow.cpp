@@ -27,28 +27,7 @@ void AuthWindow::on_auth_button_clicked()
     QString password = this->ui->password_line_edit->text();
     try {
         QSharedPointer<QPair<int, User>> user = check_auth(login, password);
-        switch(user->second.role()) {
-            case (UserRole::Client): {
-                ClientAreaWindow* client = new ClientAreaWindow{user->first};
-                client->show();
-                break;
-            }
-            case (UserRole::Admin): {
-                AdminAreaWindow* admin = new AdminAreaWindow{user->first};
-                admin->show();
-                break;
-            }
-            case (UserRole::Worker): {
-                WorkerAreaWindow* worker = new WorkerAreaWindow{user->first};
-                worker->show();
-                break;
-            }
-            case (UserRole::None): {
-                throw std::runtime_error{"User role is unknown"};
-                break;
-            }
-        }
-        this->close();
+        open_user_window(user->second.role(), user->first);
     }
 
     catch (std::exception& e) {
@@ -171,4 +150,28 @@ void AuthWindow::on_drop_action_triggered()
         msgBox.setIcon(QMessageBox::Critical);
         msgBox.exec();
     }
+}
+
+void AuthWindow::open_user_window(UserRole role, const int& user_id) {
+    QWidget* window = nullptr;
+    switch(role) {
+        case (UserRole::Client): {
+            window = new ClientAreaWindow{user_id};
+            break;
+        }
+        case (UserRole::Admin): {
+            window = new AdminAreaWindow{user_id};
+            break;
+        }
+        case (UserRole::Worker): {
+            window = new WorkerAreaWindow{user_id};
+            break;
+        }
+    }
+    if (window) {
+        window->show();
+        this->close();
+    }
+    else
+        throw std::runtime_error{"User role is unknown"};
 }
