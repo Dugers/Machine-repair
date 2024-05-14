@@ -9,7 +9,7 @@ ListRepairsMachineWindow::ListRepairsMachineWindow(const int& user_id, const int
     QWidget(parent),
     ui(new Ui::ListRepairsMachineWindow),
     mUser_id{user_id},
-    mOrders{db::get_machine_orders(db::PostgresPool::get(), mMachine_id)}
+    mOrders{db::get_machine_orders(mMachine_id)}
 {
     ui->setupUi(this);
     for (int i = 0; i < ui->orders_table_widget->columnCount(); ++i)

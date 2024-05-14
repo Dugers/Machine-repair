@@ -1,15 +1,15 @@
 #include "db.h"
 #include <QSqlQuery>
 
-bool db::delete_user(const QSqlDatabase& db, const int& user_id) {
-    QSqlQuery query{db};
+bool db::delete_user(const int& user_id) {
+    QSqlQuery query{db::current_pool()};
     query.prepare("DELETE FROM users WHERE id = :user_id");
     query.bindValue(":user_id", user_id);
     return query.exec();
 }
 
-bool db::clear_tables(const QSqlDatabase& db) {
-    QSqlQuery query{db};
+bool db::clear_tables() {
+    QSqlQuery query{db::current_pool()};
     bool ans = true;
     ans &= query.exec("DELETE FROM orders");
     ans &= query.exec("DELETE FROM services_marks");
@@ -22,8 +22,8 @@ bool db::clear_tables(const QSqlDatabase& db) {
     return ans;
 }
 
-bool db::drop_tables(const QSqlDatabase& db) {
-    QSqlQuery query{db};
+bool db::drop_tables() {
+    QSqlQuery query{db::current_pool()};
     bool ans = true;
     ans &= query.exec("DROP TABLE orders");
     ans &= query.exec("DROP TABLE services_marks");

@@ -29,7 +29,7 @@ void CompleteOrderWindow::on_complete_order_button_clicked()
         confirm_dialog.setModal(true);
         if (!confirm_dialog.exec())
             return;
-        if (!db::complete_order(db::PostgresPool::get(), mOrder_id, description))
+        if (!db::complete_order(mOrder_id, description))
             throw std::runtime_error{"Не удалось завершить заказ"};
         msgBox.setText("Заказ успешно завершен");
         msgBox.setIcon(QMessageBox::Information);

@@ -2,20 +2,20 @@
 #include <QSqlQuery>
 #include <QSqlRecord>
 
-void db::create_tables(const QSqlDatabase& db) {
-    db::create_enum_roles(db);
-    db::create_table_users(db);
-    db::create_table_machine_types(db);
-    db::create_table_machine_brands(db);
-    db::create_table_machine_marks(db);
-    db::create_table_machines(db);
-    db::create_table_services(db);
-    db::create_table_services_marks(db);
-    db::create_table_orders(db);
+void db::create_tables() {
+    db::create_enum_roles();
+    db::create_table_users();
+    db::create_table_machine_types();
+    db::create_table_machine_brands();
+    db::create_table_machine_marks();
+    db::create_table_machines();
+    db::create_table_services();
+    db::create_table_services_marks();
+    db::create_table_orders();
 }
 
-void db::create_enum_roles(const QSqlDatabase& db) {
-    QSqlQuery select_query{db};
+void db::create_enum_roles() {
+    QSqlQuery select_query{db::current_pool()};
     select_query.prepare("SELECT * FROM pg_type WHERE typname = :typeName");
     select_query.bindValue(":typeName", "user_role"); // Проверяем существует ли такой тип
 
@@ -23,15 +23,15 @@ void db::create_enum_roles(const QSqlDatabase& db) {
         throw std::runtime_error{"Failed to make select request"};
 
     if (!select_query.next()) { // Тип еще не создан, значит создаем
-        QSqlQuery create_query{db};
+        QSqlQuery create_query{db::current_pool()};
         if (!create_query.exec("CREATE TYPE user_role AS ENUM ('Client', 'Worker', 'Admin')")) // Выполнился ли запрос
             throw std::runtime_error{"Failed to create enum user_role request"};
 
     }
 }
 
-void db::create_table_users(const QSqlDatabase& db) {
-    QSqlQuery create_query{db};
+void db::create_table_users() {
+    QSqlQuery create_query{db::current_pool()};
     bool success = create_query.exec(R"!!!(
     CREATE TABLE IF NOT EXISTS users (
         id SERIAL PRIMARY KEY NOT NULL,
@@ -46,8 +46,8 @@ void db::create_table_users(const QSqlDatabase& db) {
         throw std::runtime_error{"Failed to create users table request"};
 }
 
-void db::create_table_machine_types(const QSqlDatabase& db) {
-    QSqlQuery create_query{db};
+void db::create_table_machine_types() {
+    QSqlQuery create_query{db::current_pool()};
     bool success = create_query.exec(R"!!!(
     CREATE TABLE IF NOT EXISTS machine_types (
         id SERIAL PRIMARY KEY NOT NULL,
@@ -59,8 +59,8 @@ void db::create_table_machine_types(const QSqlDatabase& db) {
         throw std::runtime_error{"Failed to create machine_types table request"};
 }
 
-void db::create_table_machine_brands(const QSqlDatabase& db) {
-    QSqlQuery create_query{db};
+void db::create_table_machine_brands() {
+    QSqlQuery create_query{db::current_pool()};
     bool success = create_query.exec(R"!!!(
     CREATE TABLE IF NOT EXISTS machine_brands (
       id SERIAL PRIMARY KEY NOT NULL,
@@ -72,8 +72,8 @@ void db::create_table_machine_brands(const QSqlDatabase& db) {
         throw std::runtime_error{"Failed to create machine_brands table request"};
 }
 
-void db::create_table_machine_marks(const QSqlDatabase& db) {
-    QSqlQuery create_query{db};
+void db::create_table_machine_marks() {
+    QSqlQuery create_query{db::current_pool()};
     bool success = create_query.exec(R"!!!(
     CREATE TABLE IF NOT EXISTS machine_marks (
         id SERIAL PRIMARY KEY NOT NULL,
@@ -88,8 +88,8 @@ void db::create_table_machine_marks(const QSqlDatabase& db) {
 
 }
 
-void db::create_table_machines(const QSqlDatabase& db) {
-    QSqlQuery create_query{db};
+void db::create_table_machines() {
+    QSqlQuery create_query{db::current_pool()};
     bool success = create_query.exec(R"!!!(
     CREATE TABLE IF NOT EXISTS machines (
         id SERIAL PRIMARY KEY NOT NULL,
@@ -104,8 +104,8 @@ void db::create_table_machines(const QSqlDatabase& db) {
         throw std::runtime_error{"Failed to create machines table request"};
 }
 
-void db::create_table_services(const QSqlDatabase& db) {
-    QSqlQuery create_query{db};
+void db::create_table_services() {
+    QSqlQuery create_query{db::current_pool()};
     bool success = create_query.exec(R"!!!(
     CREATE TABLE IF NOT EXISTS services (
         id SERIAL PRIMARY KEY NOT NULL,
@@ -122,8 +122,8 @@ void db::create_table_services(const QSqlDatabase& db) {
         throw std::runtime_error{"Failed to create services table request"};
 }
 
-void db::create_table_services_marks(const QSqlDatabase& db) {
-    QSqlQuery create_query{db};
+void db::create_table_services_marks() {
+    QSqlQuery create_query{db::current_pool()};
     bool success = create_query.exec(R"!!!(
     CREATE TABLE IF NOT EXISTS services_marks (
         id SERIAL PRIMARY KEY NOT NULL,
@@ -142,8 +142,8 @@ void db::create_table_services_marks(const QSqlDatabase& db) {
         throw std::runtime_error{"Failed to create users table request"};
 }
 
-void db::create_table_orders(const QSqlDatabase& db) {
-    QSqlQuery create_query{db};
+void db::create_table_orders() {
+    QSqlQuery create_query{db::current_pool()};
     bool success = create_query.exec(R"!!!(
     CREATE TABLE IF NOT EXISTS orders (
         id SERIAL PRIMARY KEY NOT NULL,
@@ -169,8 +169,8 @@ void db::create_table_orders(const QSqlDatabase& db) {
 }
 
 
-bool db::create_order(const QSqlDatabase& db, const int& customer_id, const int& machine_id, const int& service_id, const QDate& date_start) {
-    QSqlQuery query{db};
+bool db::create_order(const int& customer_id, const int& machine_id, const int& service_id, const QDate& date_start) {
+    QSqlQuery query{db::current_pool()};
     query.prepare("INSERT INTO orders(date_start, customer, machine, service) "
                               "VALUES(:date_start, :customer, :machine, :service)");
     query.bindValue(":date_start", date_start);
@@ -180,8 +180,8 @@ bool db::create_order(const QSqlDatabase& db, const int& customer_id, const int&
     return query.exec();
 }
 
-bool db::create_machine(const QSqlDatabase& db, const Machine& machine, const int& owner_id, const int& mark_id) {
-    QSqlQuery query{db};
+bool db::create_machine(const Machine& machine, const int& owner_id, const int& mark_id) {
+    QSqlQuery query{db::current_pool()};
     query.prepare("INSERT INTO machines(name, owner, mark) "
                               "VALUES(:name, :owner, :mark)");
     query.bindValue(":name", machine.name());
@@ -190,8 +190,8 @@ bool db::create_machine(const QSqlDatabase& db, const Machine& machine, const in
     return query.exec();
 }
 
-bool db::create_user(const QSqlDatabase& db, const User& user) {
-    QSqlQuery query{db};
+bool db::create_user(const User& user) {
+    QSqlQuery query{db::current_pool()};
     query.prepare("INSERT INTO users(name, login, password, role) "
                               "VALUES(:name, :login, :password, :role)");
     query.bindValue(":name", user.name());
@@ -201,8 +201,8 @@ bool db::create_user(const QSqlDatabase& db, const User& user) {
     return query.exec();
 }
 
-bool db::create_machine_mark(const QSqlDatabase& db, const int& type_id, const int& brand_id) {
-    QSqlQuery query{db};
+bool db::create_machine_mark(const int& type_id, const int& brand_id) {
+    QSqlQuery query{db::current_pool()};
     query.prepare("INSERT INTO machine_marks(type, brand) "
                               "VALUES(:type, :brand)");
     query.bindValue(":type", type_id);

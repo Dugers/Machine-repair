@@ -8,7 +8,7 @@ AboutOrderWindow::AboutOrderWindow(const int& user_id, const int& order_id, QWid
     QWidget(parent),
     ui(new Ui::AboutOrderWindow),
     mUser_id{user_id},
-    mOrder{std::move(*db::get_order(db::PostgresPool::get(), order_id))}
+    mOrder{std::move(*db::get_order(order_id))}
 {
     ui->setupUi(this);
     if (!mOrder.second.complete()) {
@@ -44,7 +44,7 @@ AboutOrderWindow::~AboutOrderWindow()
 
 void AboutOrderWindow::on_about_machine_button_clicked()
 {
-    (new AboutMachineWindow{mUser_id, db::get_machine_by_order(db::PostgresPool::get(), mOrder.first)->first})->show();
+    (new AboutMachineWindow{mUser_id, db::get_machine_by_order(mOrder.first)->first})->show();
     this->close();
 }
 

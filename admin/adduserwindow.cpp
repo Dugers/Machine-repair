@@ -48,7 +48,7 @@ void AddUserWindow::on_add_button_clicked()
         if (password.isEmpty())
             password = this->generate_password();
         User user{std::move(name), std::move(login), std::move(password), role_by_str(role)};
-        if (!db::create_user(db::PostgresPool::get(), user))
+        if (!db::create_user(user))
             throw std::runtime_error{"Не удалось создать пользователя, возможно:\n1) Проблемы с базой данных\n2) Пользователь с таким логином уже существует"};
         QMessageBox msgBox{this};
         msgBox.setText("Успешно создан пользователь\nЛогин: " + user.login() + "\nПароль: " + user.password());
@@ -68,11 +68,11 @@ QString AddUserWindow::generate_login(QString name) {
     AddUserWindow::validate_name(name);
     name = name.replace(' ', '_').toLower();
     translit(name);
-    QSharedPointer<QPair<int, User>> user = db::get_user(db::PostgresPool::get(), name);
+    QSharedPointer<QPair<int, User>> user = db::get_user(name);
     int add_index = 0;
     while (user) {
         ++add_index;
-        user = db::get_user(db::PostgresPool::get(), name + QString::number(add_index));
+        user = db::get_user(name + QString::number(add_index));
         qDebug() << name + QString::number(add_index);
     }
     if (add_index != 0)

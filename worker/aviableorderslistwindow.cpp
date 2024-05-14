@@ -13,7 +13,7 @@ AviableOrdersListWindow::AviableOrdersListWindow(const int& user_id, QWidget *pa
     ui->setupUi(this);
     for (int i = 0; i < ui->orders_table_widget->columnCount(); ++i)
         ui->orders_table_widget->setColumnWidth(i, ui->orders_table_widget->width()/ui->orders_table_widget->columnCount());
-    mAviable_orders = db::get_aviable_orders(db::PostgresPool::get());
+    mAviable_orders = db::get_aviable_orders();
     for (auto const& aviable_order: mAviable_orders) {
         if (!aviable_order.second.machine() || !aviable_order.second.machine()->mark() || !aviable_order.second.service())
             throw std::invalid_argument{"Не получилось отобразить данные заказа"};
@@ -36,9 +36,9 @@ void AviableOrdersListWindow::on_take_order_button_clicked()
     try {
         if (ui->orders_table_widget->currentRow() == -1)
             throw std::runtime_error{"Выберите заказ"};
-        if (db::get_worker_orders_count(db::PostgresPool::get(), mUser_id) >= 1)
+        if (db::get_worker_orders_count(mUser_id) >= 1)
             throw std::runtime_error{"Нельзя выполнять одновременно больше одного заказа"};
-        if (!db::update_order_executor(db::PostgresPool::get(), mAviable_orders[ui->orders_table_widget->currentRow()].first, mUser_id))
+        if (!db::update_order_executor(mAviable_orders[ui->orders_table_widget->currentRow()].first, mUser_id))
             throw std::runtime_error{"Не удалось взять заказ"};
         msgBox.setText("Заказ успешно взят");
         msgBox.setIcon(QMessageBox::Information);

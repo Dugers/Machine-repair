@@ -9,7 +9,7 @@ EditUserWindow::EditUserWindow(const int& user_id, const QString& edited_user_lo
     QWidget(parent),
     ui(new Ui::EditUserWindow),
     mUser_id{user_id},
-    mEdited_user{db::get_user(db::PostgresPool::get(), edited_user_login)}
+    mEdited_user{db::get_user(edited_user_login)}
 {
     if (!mEdited_user)
         throw std::runtime_error{"Ошибка при получение данных о пользователе"};
@@ -65,13 +65,13 @@ void EditUserWindow::on_add_button_clicked()
         if (!password.isEmpty()) {
             AddUserWindow::validate_password(password);
         }
-        if (name != mEdited_user->second.name() && !db::update_user_name(db::PostgresPool::get(), mEdited_user->first, name))
+        if (name != mEdited_user->second.name() && !db::update_user_name(mEdited_user->first, name))
             throw std::runtime_error{"Не удалось обновить имя"};
-        if (login != mEdited_user->second.login() && !db::update_user_login(db::PostgresPool::get(), mEdited_user->first, login))
+        if (login != mEdited_user->second.login() && !db::update_user_login(mEdited_user->first, login))
             throw std::runtime_error{"Не удалось обновить логин"};
-        if (role != mEdited_user->second.role() && !db::update_user_role(db::PostgresPool::get(), mEdited_user->first, role))
+        if (role != mEdited_user->second.role() && !db::update_user_role(mEdited_user->first, role))
             throw std::runtime_error{"Не удалось обновить роль"};
-        if (!password.isEmpty() && !db::update_user_password(db::PostgresPool::get(), mEdited_user->first, password))
+        if (!password.isEmpty() && !db::update_user_password(mEdited_user->first, password))
             throw std::runtime_error{"Не удалось обновить пароль"};
         msgBox.setText("Данные пользователя успешно обновленны");
         msgBox.setIcon(QMessageBox::Information);

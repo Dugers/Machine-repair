@@ -39,7 +39,7 @@ void AuthWindow::on_auth_button_clicked()
 }
 
 QSharedPointer<QPair<int, User>> AuthWindow::check_auth(const QString& login, const QString& password) {
-    QSharedPointer<QPair<int, User>> user = db::get_user(db::PostgresPool::get(), login);
+    QSharedPointer<QPair<int, User>> user = db::get_user(login);
     if (user && user->second.password() == User::hash_password(password))
         return user;
     else
@@ -98,7 +98,7 @@ void AuthWindow::on_load_dump_action_triggered()
 
         if (!fileName.isEmpty() && !fileName.isNull())
         {
-            if (!db::drop_tables(db::PostgresPool::get()))
+            if (!db::drop_tables())
                 throw std::runtime_error{"Не удалось удалить старые таблицы"};
             QStringList args;
             args << "-U";
@@ -140,7 +140,7 @@ void AuthWindow::on_load_dump_action_triggered()
 void AuthWindow::on_drop_action_triggered()
 {
     QMessageBox msgBox{this};
-    if (db::clear_tables(db::PostgresPool::get())) {
+    if (db::clear_tables()) {
         msgBox.setText("Таблицы успешно очищены");
         msgBox.setIcon(QMessageBox::Information);
         msgBox.exec();
@@ -161,11 +161,10 @@ void AuthWindow::open_user_window(UserRole role, const int& user_id) {
         }
         case (UserRole::Admin): {
             window = new AdminAreaWindow{user_id};
-            break;
+
         }
         case (UserRole::Worker): {
             window = new WorkerAreaWindow{user_id};
-            break;
         }
     }
     if (window) {

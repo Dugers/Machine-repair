@@ -14,7 +14,7 @@ ActiveOrdersListWindow::ActiveOrdersListWindow(const int& user_id, QWidget *pare
     ui->setupUi(this);
     for (int i = 0; i < ui->orders_table_widget->columnCount(); ++i)
         ui->orders_table_widget->setColumnWidth(i, ui->orders_table_widget->width()/ui->orders_table_widget->columnCount());
-    mActive_orders = db::get_active_orders(db::PostgresPool::get(), mUser_id);
+    mActive_orders = db::get_active_orders(mUser_id);
     for (auto const& active_order: mActive_orders) {
         if (!active_order.second.machine() || !active_order.second.machine()->mark() || !active_order.second.service())
             throw std::invalid_argument{"Не получилось отобразить данные заказа"};

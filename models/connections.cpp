@@ -19,4 +19,4 @@ const QSqlDatabase& db::PostgresPool::get() {
     return db;
 }
 
-const std::function<const QSqlDatabase&()> current_pool = db::PostgresPool::get;
+std::function<const QSqlDatabase&()> db::current_pool = db::PostgresPool::get;
