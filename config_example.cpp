@@ -1,4 +1,4 @@
-// remove this file to config.cpp
+// rename this file to config.cpp
 
 #include <QString>
 #include <QDateTime>
