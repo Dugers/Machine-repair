@@ -11,9 +11,9 @@ AddMachineWindow::AddMachineWindow(const int& user_id, QWidget *parent) :
     mUser_id{user_id}
 {
     ui->setupUi(this);
-    QVector<QPair<int, MachineMark::MachineType>> types = db::get_machine_types();
-    for (const QPair<int, MachineMark::MachineType>& type : types)
-        this->ui->type_combo_box->addItem(type.second.name(), type.first);
+    QVector<MachineMark::MachineTypeSql> types = db::get_machine_types();
+    for (const MachineMark::MachineTypeSql& type : types)
+        this->ui->type_combo_box->addItem(type.name(), type.id());
 }
 
 AddMachineWindow::~AddMachineWindow()
@@ -29,12 +29,12 @@ void AddMachineWindow::on_add_button_clicked()
     int brand_id = this->ui->brand_combo_box->currentData().toInt();
     try {
         this->validate(name, type_id, brand_id);
-        QSharedPointer<QPair<int, MachineMark>> mark = db::get_machine_mark(type_id, brand_id);
+        QSharedPointer<MachineMarkSql> mark = db::get_machine_mark(type_id, brand_id);
         if (!mark) {
             db::create_machine_mark(type_id, brand_id);
             mark = db::get_machine_mark(type_id, brand_id);
         }
-        if (!db::create_machine(Machine{name, nullptr, nullptr}, mUser_id, mark->first))
+        if (!db::create_machine(Machine{name, nullptr, nullptr}, mUser_id, mark->id()))
             throw std::runtime_error{"Не удалось выполнить операцию, возможные причины:\n1) Проблемы с базой данных \n2) Станок с таким именем уже есть"};
         (new ClientMachinesWindow{mUser_id})->show();
         this->close();
@@ -53,10 +53,10 @@ void AddMachineWindow::on_type_combo_box_currentIndexChanged(int index)
 {
     int type_id = this->ui->type_combo_box->currentData().toInt();
     try {
-        QVector<QPair<int, MachineMark::MachineBrand>> brands = db::get_machine_brands(type_id);
+        QVector<MachineMark::MachineBrandSql> brands = db::get_machine_brands(type_id);
         this->ui->brand_combo_box->clear();
-        for (const QPair<int, MachineMark::MachineBrand>& brand : brands)
-            this->ui->brand_combo_box->addItem(brand.second.name(), brand.first);
+        for (const MachineMark::MachineBrandSql& brand : brands)
+            this->ui->brand_combo_box->addItem(brand.name(), brand.id());
         this->ui->brand_combo_box->setEnabled(true);
     }
     catch (std::exception e) {

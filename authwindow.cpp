@@ -26,8 +26,8 @@ void AuthWindow::on_auth_button_clicked()
     QString login = this->ui->login_line_edit->text();
     QString password = this->ui->password_line_edit->text();
     try {
-        QSharedPointer<QPair<int, User>> user = check_auth(login, password);
-        open_user_window(user->second.role(), user->first);
+        QSharedPointer<UserSql> user = check_auth(login, password);
+        open_user_window(user->role(), user->id());
     }
 
     catch (std::exception& e) {
@@ -38,9 +38,9 @@ void AuthWindow::on_auth_button_clicked()
     }
 }
 
-QSharedPointer<QPair<int, User>> AuthWindow::check_auth(const QString& login, const QString& password) {
-    QSharedPointer<QPair<int, User>> user = db::get_user(login);
-    if (user && user->second.password() == User::hash_password(password))
+QSharedPointer<UserSql> AuthWindow::check_auth(const QString& login, const QString& password) {
+    QSharedPointer<UserSql> user = db::get_user(login);
+    if (user && user->password() == User::hash_password(password))
         return user;
     else
         throw std::runtime_error{"Incorrect login or password"};
@@ -154,7 +154,6 @@ void AuthWindow::on_drop_action_triggered()
 
 void AuthWindow::open_user_window(UserRole role, const int& user_id) {
     QWidget* window = nullptr;
-    qDebug() << str_by_role(role);
     switch(role) {
         case (UserRole::Client): {
             window = new ClientAreaWindow{user_id};

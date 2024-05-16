@@ -15,13 +15,13 @@ AviableOrdersListWindow::AviableOrdersListWindow(const int& user_id, QWidget *pa
         ui->orders_table_widget->setColumnWidth(i, ui->orders_table_widget->width()/ui->orders_table_widget->columnCount());
     mAviable_orders = db::get_aviable_orders();
     for (auto const& aviable_order: mAviable_orders) {
-        if (!aviable_order.second.machine() || !aviable_order.second.machine()->mark() || !aviable_order.second.service())
+        if (!aviable_order.machine() || !aviable_order.machine()->mark() || !aviable_order.service())
             throw std::invalid_argument{"Не получилось отобразить данные заказа"};
         ui->orders_table_widget->setRowCount(ui->orders_table_widget->rowCount()+1);
         int row_index = ui->orders_table_widget->rowCount() - 1;
-        ui->orders_table_widget->setItem(row_index, 0, new QTableWidgetItem{aviable_order.second.machine()->mark()->type().name()});
-        ui->orders_table_widget->setItem(row_index, 1, new QTableWidgetItem{aviable_order.second.machine()->mark()->brand().name()});
-        ui->orders_table_widget->setItem(row_index, 2, new QTableWidgetItem{aviable_order.second.service()->name()});
+        ui->orders_table_widget->setItem(row_index, 0, new QTableWidgetItem{aviable_order.machine()->mark()->type().name()});
+        ui->orders_table_widget->setItem(row_index, 1, new QTableWidgetItem{aviable_order.machine()->mark()->brand().name()});
+        ui->orders_table_widget->setItem(row_index, 2, new QTableWidgetItem{aviable_order.service()->name()});
     }
 }
 
@@ -38,7 +38,7 @@ void AviableOrdersListWindow::on_take_order_button_clicked()
             throw std::runtime_error{"Выберите заказ"};
         if (db::get_worker_orders_count(mUser_id) >= 1)
             throw std::runtime_error{"Нельзя выполнять одновременно больше одного заказа"};
-        if (!db::update_order_executor(mAviable_orders[ui->orders_table_widget->currentRow()].first, mUser_id))
+        if (!db::update_order_executor(mAviable_orders[ui->orders_table_widget->currentRow()].id(), mUser_id))
             throw std::runtime_error{"Не удалось взять заказ"};
         msgBox.setText("Заказ успешно взят");
         msgBox.setIcon(QMessageBox::Information);
@@ -60,7 +60,7 @@ void AviableOrdersListWindow::on_about_button_clicked()
     try {
         if (ui->orders_table_widget->currentRow() == -1)
             throw std::runtime_error{"Выберите заказ"};
-        (new AboutOrderWindow{mUser_id, mAviable_orders[ui->orders_table_widget->currentRow()].first})->show();
+        (new AboutOrderWindow{mUser_id, mAviable_orders[ui->orders_table_widget->currentRow()].id()})->show();
         this->close();
     }
     catch (std::exception e) {

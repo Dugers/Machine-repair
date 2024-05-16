@@ -24,7 +24,7 @@ private slots:
 private:
     Ui::EditUserWindow *ui;
     const int mUser_id;
-    const QSharedPointer<QPair<int, User>> mEdited_user;
+    const QSharedPointer<UserSql> mEdited_user;
 };
 
 #endif // EDITUSERWINDOW_H

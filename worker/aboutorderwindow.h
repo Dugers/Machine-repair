@@ -24,7 +24,7 @@ private slots:
 private:
     Ui::AboutOrderWindow *ui;
     const int mUser_id;
-    const QPair<int, Order> mOrder;
+    const OrderSql mOrder;
 };
 
 #endif // ABOUTORDERWINDOW_H

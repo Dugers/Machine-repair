@@ -68,6 +68,8 @@ public:
     OrderSql(bool&& complete, QDate&& date_start, QDate&& date_end, QString&& description,
              QSharedPointer<const User>&& customer, QSharedPointer<const User>&& executor,
              QSharedPointer<const Machine>&& machine, QSharedPointer<const Service>&& service, int&& id) noexcept;
+
+    OrderSql(Order&& order, const int& id);
 };
 
 #endif // ORDER_H

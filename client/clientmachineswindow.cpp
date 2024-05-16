@@ -12,9 +12,9 @@ ClientMachinesWindow::ClientMachinesWindow(const int& user_id, QWidget *parent) 
 {
     ui->setupUi(this);
     try{
-        QVector<QPair<int, Machine>> machines = db::get_machines(mUser_id);
-            for (const QPair<int, Machine>& machine : machines)
-        this->ui->machines_list->addItem(machine.second.name());
+        QVector<MachineSql> machines = db::get_machines(mUser_id);
+            for (const MachineSql& machine : machines)
+        this->ui->machines_list->addItem(machine.name());
     } catch (std::exception e) {
         QMessageBox msgBox{this};
         msgBox.setText(e.what());

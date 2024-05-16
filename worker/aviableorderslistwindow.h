@@ -29,7 +29,7 @@ private slots:
 private:
     Ui::AviableOrdersListWindow *ui;
     const int mUser_id;
-    QVector<QPair<int, Order>> mAviable_orders;
+    QVector<OrderSql> mAviable_orders;
 };
 
 #endif // AVIABLEORDERSLISTWINDOW_H

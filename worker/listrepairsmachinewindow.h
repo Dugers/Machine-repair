@@ -27,7 +27,7 @@ private slots:
 private:
     Ui::ListRepairsMachineWindow *ui;
     const int mUser_id;
-    const QVector<QPair<int, Order>> mOrders;
+    const QVector<OrderSql> mOrders;
 };
 
 #endif // LISTREPAIRSMACHINEWINDOW_H

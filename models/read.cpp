@@ -34,7 +34,7 @@ QSharedPointer<QDate> db::get_last_repair_date(const int& machine_id){
     return QSharedPointer<QDate>::create(query.value("date_end").toDate());
 }
 
-QSharedPointer<QPair<int, User>> db::get_user(const QString& user_login) {
+QSharedPointer<UserSql> db::get_user(const QString& user_login) {
     QSqlQuery query{db::current_pool()};
     query.prepare("SELECT * FROM users WHERE login = :login");
     query.bindValue(":login", user_login);
@@ -46,10 +46,10 @@ QSharedPointer<QPair<int, User>> db::get_user(const QString& user_login) {
     UserRole role = role_by_str(query.value("role").toString());
     QString name = query.value("name").toString();
     int id = query.value("id").toInt();
-    return QSharedPointer<QPair<int, User>>::create(id, User{std::move(name), user_login, std::move(password), std::move(role)});
+    return QSharedPointer<UserSql>::create(std::move(name), user_login, std::move(password), std::move(role), id);
 }
 
-QSharedPointer<QPair<int, User>> db::get_user(const int& user_id) {
+QSharedPointer<UserSql> db::get_user(const int& user_id) {
     QSqlQuery query{db::current_pool()};
     query.prepare("SELECT * FROM users WHERE id = :id");
     query.bindValue(":id", user_id);
@@ -61,10 +61,10 @@ QSharedPointer<QPair<int, User>> db::get_user(const int& user_id) {
     QString password = query.value(query.record().indexOf("password")).toString();
     UserRole role = role_by_str(query.value(query.record().indexOf("role")).toString());
     QString name = query.value(query.record().indexOf("name")).toString();
-    return QSharedPointer<QPair<int, User>>::create(user_id, User{std::move(name), std::move(login), std::move(password), std::move(role)});
+    return QSharedPointer<UserSql>::create(std::move(name), std::move(login), std::move(password), std::move(role), user_id);
 }
 
-QSharedPointer<QPair<int, MachineMark::MachineBrand>> db::get_machine_brand(const int& brand_id) {
+QSharedPointer<MachineMark::MachineBrandSql> db::get_machine_brand(const int& brand_id) {
     QSqlQuery query{db::current_pool()};
     query.prepare("SELECT * FROM machine_brands WHERE id = :id");
     query.bindValue(":id", brand_id);
@@ -73,10 +73,10 @@ QSharedPointer<QPair<int, MachineMark::MachineBrand>> db::get_machine_brand(cons
     if (!query.next())
         return {};
     QString name = query.value(query.record().indexOf("name")).toString();
-    return QSharedPointer<QPair<int, MachineMark::MachineBrand>>::create(brand_id, MachineMark::MachineBrand{std::move(name)});
+    return QSharedPointer<MachineMark::MachineBrandSql>::create(std::move(name), brand_id);
 }
 
-QSharedPointer<QPair<int, MachineMark::MachineType>> db::get_machine_type(const int& type_id) {
+QSharedPointer<MachineMark::MachineTypeSql> db::get_machine_type(const int& type_id) {
     QSqlQuery query{db::current_pool()};
     query.prepare("SELECT * FROM machine_types WHERE id = :id");
     query.bindValue(":id", type_id);
@@ -85,10 +85,10 @@ QSharedPointer<QPair<int, MachineMark::MachineType>> db::get_machine_type(const 
     if (!query.next())
         return {};
     QString name = query.value(query.record().indexOf("name")).toString();
-    return QSharedPointer<QPair<int, MachineMark::MachineType>>::create(type_id, MachineMark::MachineType{std::move(name)});
+    return QSharedPointer<MachineMark::MachineTypeSql>::create(std::move(name), type_id);
 }
 
-QSharedPointer<QPair<int, MachineMark>> db::get_machine_mark(const int& mark_id) {
+QSharedPointer<MachineMarkSql> db::get_machine_mark(const int& mark_id) {
     QSqlQuery query{db::current_pool()};
     query.prepare("SELECT * FROM machine_marks WHERE id = :id");
     query.bindValue(":id", mark_id);
@@ -98,10 +98,10 @@ QSharedPointer<QPair<int, MachineMark>> db::get_machine_mark(const int& mark_id)
         return {};
     int brand_id = query.value(query.record().indexOf("brand")).toInt();
     int type_id = query.value(query.record().indexOf("type")).toInt();
-    return QSharedPointer<QPair<int, MachineMark>>::create(mark_id, MachineMark{std::move(get_machine_type(type_id)->second), std::move(get_machine_brand(brand_id)->second)});
+    return QSharedPointer<MachineMarkSql>::create(std::move(*get_machine_type(type_id)), std::move(*get_machine_brand(brand_id)), mark_id);
 }
 
-QSharedPointer<QPair<int, MachineMark>> db::get_machine_mark(const int& type_id, const int& brand_id) {
+QSharedPointer<MachineMarkSql> db::get_machine_mark(const int& type_id, const int& brand_id) {
     QSqlQuery query{db::current_pool()};
     query.prepare("SELECT * FROM machine_marks WHERE brand = :brand AND type = :type");
     query.bindValue(":brand", brand_id);
@@ -111,10 +111,10 @@ QSharedPointer<QPair<int, MachineMark>> db::get_machine_mark(const int& type_id,
     if (!query.next())
         return {};
     int mark_id = query.value(query.record().indexOf("id")).toInt();
-    return QSharedPointer<QPair<int, MachineMark>>::create(mark_id, MachineMark{std::move(get_machine_type(type_id)->second), std::move(get_machine_brand(brand_id)->second)});
+    return QSharedPointer<MachineMarkSql>::create(std::move(*get_machine_type(type_id)), std::move(*get_machine_brand(brand_id)), mark_id);
 }
 
-QSharedPointer<QPair<int, Machine>> db::get_machine(const int& machine_id) {
+QSharedPointer<MachineSql> db::get_machine(const int& machine_id) {
     QSqlQuery query{db::current_pool()};
     query.prepare("SELECT * FROM machines WHERE id = :machine_id");
     query.bindValue(":machine_id", machine_id);
@@ -123,13 +123,13 @@ QSharedPointer<QPair<int, Machine>> db::get_machine(const int& machine_id) {
     if (!query.next())
         return {};
     int owner_id = query.value(query.record().indexOf("owner")).toInt();
-    QSharedPointer<QPair<int, User>> owner = db::get_user(owner_id);
+    QSharedPointer<UserSql> owner = db::get_user(owner_id);
     QString name = query.value(query.record().indexOf("name")).toString();
-    QSharedPointer<QPair<int, MachineMark>> mark = db::get_machine_mark(query.value(query.record().indexOf("mark")).toInt());
-    return QSharedPointer<QPair<int, Machine>>::create(QPair<int, Machine>{machine_id, Machine{std::move(name), QSharedPointer<User>::create(std::move(owner->second)), QSharedPointer<MachineMark>::create(std::move(mark->second))}});
+    QSharedPointer<MachineMarkSql> mark = db::get_machine_mark(query.value(query.record().indexOf("mark")).toInt());
+    return QSharedPointer<MachineSql>::create(std::move(name), owner, mark, machine_id);
 }
 
-QSharedPointer<QPair<int, Machine>> db::get_machine_by_order(const int& order_id) {
+QSharedPointer<MachineSql> db::get_machine_by_order(const int& order_id) {
     QSqlQuery query{db::current_pool()};
     query.prepare("SELECT machine FROM orders WHERE id = :order_id");
     query.bindValue(":order_id", order_id);
@@ -137,10 +137,10 @@ QSharedPointer<QPair<int, Machine>> db::get_machine_by_order(const int& order_id
         throw std::runtime_error{"Failed to select machine request"};
     if (!query.next())
         return {};
-    return db::get_machine( query.value("machine").toInt());
+    return db::get_machine(query.value("machine").toInt());
 }
 
-QSharedPointer<QPair<int, Service>> db::get_service(const int& machine_id, const int& service_id) {
+QSharedPointer<ServiceSql> db::get_service(const int& machine_id, const int& service_id) {
     QSqlQuery query{db::current_pool()};
     query.prepare(R"!!!(
     SELECT
@@ -168,11 +168,11 @@ QSharedPointer<QPair<int, Service>> db::get_service(const int& machine_id, const
     unsigned int duration_minutes = query.value("duration_minutes").toUInt();
     Duration duration{duration_months, duration_days, duration_hours, duration_minutes};
     double price = query.value("price").toDouble();
-    return QSharedPointer<QPair<int, Service>>::create(QPair<int, Service>{service_id, Service{std::move(name), std::move(duration), std::move(price)}});
+    return QSharedPointer<ServiceSql>::create(std::move(name), std::move(duration), std::move(price), service_id);
 
 }
 
-QSharedPointer<QPair<int, Order>> db::get_order(const int& order_id) {
+QSharedPointer<OrderSql> db::get_order(const int& order_id) {
     QSqlQuery query{db::current_pool()};
     query.prepare("SELECT * FROM orders WHERE id = :order_id");
     query.bindValue(":order_id", order_id);
@@ -180,9 +180,9 @@ QSharedPointer<QPair<int, Order>> db::get_order(const int& order_id) {
         throw std::runtime_error{"Failed to select order request"};
     if (!query.next())
         return {};
-    QSharedPointer<User> customer = QSharedPointer<User>::create(get_user(query.value("customer").toInt())->second);
-    QSharedPointer<Service> service = QSharedPointer<Service>::create(get_service(query.value("machine").toInt(), query.value("service").toInt())->second);
-    QSharedPointer<Machine> machine = QSharedPointer<Machine>::create(get_machine(query.value("machine").toInt())->second);
+    QSharedPointer<User> customer = get_user(query.value("customer").toInt());
+    QSharedPointer<Service> service = get_service(query.value("machine").toInt(), query.value("service").toInt());
+    QSharedPointer<Machine> machine = get_machine(query.value("machine").toInt());
     QDate date_start = query.value("date_start").toDate();
     Order order{date_start, customer, machine, service};
     if (query.value("complete").toBool()) {
@@ -191,28 +191,28 @@ QSharedPointer<QPair<int, Order>> db::get_order(const int& order_id) {
         order.set_description(query.value("description").toString());
     }
     if (!query.isNull("executor"))
-        order.set_executor(QSharedPointer<User>::create(get_user(query.value("executor").toInt())->second));
-    return QSharedPointer<QPair<int, Order>>::create(QPair<int, Order>{order_id, std::move(order)});
+        order.set_executor(get_user(query.value("executor").toInt()));
+    return QSharedPointer<OrderSql>::create(std::move(order), order_id);
 }
 
-QVector<QPair<int, Machine>> db::get_machines(const int& owner_id) {
+QVector<MachineSql> db::get_machines(const int& owner_id) {
     QSqlQuery query{db::current_pool()};
     query.prepare("SELECT * FROM machines WHERE owner = :owner_id");
     query.bindValue(":owner_id", owner_id);
     if (!query.exec())
         throw std::runtime_error{"Failed to select machines request"};
-    QVector<QPair<int, Machine>> machines;
-    QSharedPointer<QPair<int, User>> owner = db::get_user(owner_id);
+    QVector<MachineSql> machines;
+    QSharedPointer<UserSql> owner = db::get_user(owner_id);
     while (query.next()) {
         int machine_id = query.value(query.record().indexOf("id")).toInt();
         QString name = query.value(query.record().indexOf("name")).toString();
-        QSharedPointer<QPair<int, MachineMark>> mark = db::get_machine_mark(query.value(query.record().indexOf("mark")).toInt());
-        machines.push_back({machine_id, Machine{std::move(name), QSharedPointer<User>::create(std::move(owner->second)), QSharedPointer<MachineMark>::create(std::move(mark->second))}});
+        QSharedPointer<MachineMarkSql> mark = db::get_machine_mark(query.value(query.record().indexOf("mark")).toInt());
+        machines.push_back({std::move(name), std::move(owner), std::move(mark), machine_id});
     }
     return machines;
 }
 
-QVector<QPair<int, Service>> db::get_services(const int& machine_id) {
+QVector<ServiceSql> db::get_services(const int& machine_id) {
     QSqlQuery query{db::current_pool()};
     query.prepare(R"!!!(
     SELECT
@@ -230,7 +230,7 @@ QVector<QPair<int, Service>> db::get_services(const int& machine_id) {
     query.bindValue(":machine_id", machine_id);
     if (!query.exec())
         throw std::runtime_error{"Failed to select services request"};
-    QVector<QPair<int, Service>> services;
+    QVector<ServiceSql> services;
     while (query.next()) {
         int service_id = query.value(query.record().indexOf("id")).toInt();
         QString name = query.value(query.record().indexOf("name")).toString();
@@ -240,25 +240,25 @@ QVector<QPair<int, Service>> db::get_services(const int& machine_id) {
         unsigned int duration_minutes = query.value("duration_minutes").toUInt();
         Duration duration{duration_months, duration_days, duration_hours, duration_minutes};
         double price = query.value("price").toDouble();
-        services.push_back({service_id, Service{std::move(name), std::move(duration), std::move(price)}});
+        services.push_back({std::move(name), std::move(duration), std::move(price), service_id});
     }
     return services;
 }
 
-QVector<QPair<int, MachineMark::MachineType>> db::get_machine_types() {
+QVector<MachineMark::MachineTypeSql> db::get_machine_types() {
     QSqlQuery query{db::current_pool()};
     if (!query.exec("SELECT * FROM machine_types"))
         throw std::runtime_error{"Failed to select services request"};
-    QVector<QPair<int, MachineMark::MachineType>> types;
+    QVector<MachineMark::MachineTypeSql> types;
     while (query.next()) {
         int type_id = query.value(query.record().indexOf("id")).toInt();
         QString name = query.value(query.record().indexOf("name")).toString();
-        types.push_back({type_id, MachineMark::MachineType{std::move(name)}});
+        types.push_back({std::move(name), type_id});
     }
     return types;
 }
 
-QVector<QPair<int, MachineMark::MachineBrand>> db::get_machine_brands(const int& type_id) {
+QVector<MachineMark::MachineBrandSql> db::get_machine_brands(const int& type_id) {
     QSqlQuery query{db::current_pool()};
     query.prepare(R"!!!(
     SELECT machine_brands.id AS id, machine_brands.name
@@ -269,35 +269,35 @@ QVector<QPair<int, MachineMark::MachineBrand>> db::get_machine_brands(const int&
     query.bindValue(":type_id", type_id);
     if (!query.exec())
         throw std::runtime_error{"Failed to select brands request"};
-    QVector<QPair<int, MachineMark::MachineBrand>> brands;
+    QVector<MachineMark::MachineBrandSql> brands;
     while (query.next()) {
         int brand_id = query.value(query.record().indexOf("id")).toInt();
         QString name = query.value(query.record().indexOf("name")).toString();
-        brands.push_back({brand_id, MachineMark::MachineBrand{std::move(name)}});
+        brands.push_back({std::move(name), brand_id});
     }
     return brands;
 }
 
-QVector<QPair<int, User>> db::get_users() {
+QVector<UserSql> db::get_users() {
     QSqlQuery query{db::current_pool()};
     query.prepare(R"!!!(
     SELECT * FROM users;
 )!!!");
     if (!query.exec())
         throw std::runtime_error{"Failed to select users request"};
-    QVector<QPair<int, User>> users;
+    QVector<UserSql> users;
     while (query.next()) {
         int user_id = query.value(query.record().indexOf("id")).toInt();
         QString name = query.value(query.record().indexOf("name")).toString();
         QString login = query.value("login").toString();
         QString password = query.value("password").toString();
         UserRole role = role_by_str(query.value("role").toString());
-        users.push_back({user_id, User{std::move(name), std::move(login), std::move(password), std::move(role)}});
+        users.push_back({std::move(name), std::move(login), std::move(password), std::move(role), user_id});
     }
     return users;
 }
 
-QVector<QPair<int, Order>> db::get_aviable_orders() {
+QVector<OrderSql> db::get_aviable_orders() {
     QSqlQuery query{db::current_pool()};
     if (!query.exec(R"!!!(
                     SELECT id, customer, machine, service, date_start
@@ -305,19 +305,19 @@ QVector<QPair<int, Order>> db::get_aviable_orders() {
                     WHERE executor is NULL AND complete = false;
             )!!!"))
         throw std::runtime_error{"Failed to select aviable orders request"};
-    QVector<QPair<int, Order>> orders;
+    QVector<OrderSql> orders;
     while (query.next()) {
         int order_id = query.value("id").toInt();
-        QSharedPointer<User> customer = QSharedPointer<User>::create(get_user(query.value("customer").toInt())->second);
-        QSharedPointer<Service> service = QSharedPointer<Service>::create(get_service(query.value("machine").toInt(), query.value("service").toInt())->second);
-        QSharedPointer<Machine> machine = QSharedPointer<Machine>::create(get_machine(query.value("machine").toInt())->second);
+        QSharedPointer<User> customer = get_user(query.value("customer").toInt());
+        QSharedPointer<Service> service = get_service(query.value("machine").toInt(), query.value("service").toInt());
+        QSharedPointer<Machine> machine = get_machine(query.value("machine").toInt());
         QDate date_start = query.value("date_start").toDate();
-        orders.push_back({order_id, Order{date_start, customer, machine, service}});
+        orders.push_back({date_start, customer, machine, service, order_id});
     }
     return orders;
 }
 
-QVector<QPair<int, Order>> db::get_active_orders(const int& user_id) {
+QVector<OrderSql> db::get_active_orders(const int& user_id) {
     QSqlQuery query{db::current_pool()};
     query.prepare(R"!!!(
                     SELECT id, customer, machine, service, date_start
@@ -327,19 +327,19 @@ QVector<QPair<int, Order>> db::get_active_orders(const int& user_id) {
     query.bindValue(":user_id", user_id);
     if (!query.exec())
         throw std::runtime_error{"Failed to select active orders"};
-    QVector<QPair<int, Order>> orders;
+    QVector<OrderSql> orders;
     while (query.next()) {
         int order_id = query.value("id").toInt();
-        QSharedPointer<User> customer = QSharedPointer<User>::create(get_user( query.value("customer").toInt())->second);
-        QSharedPointer<Service> service = QSharedPointer<Service>::create(get_service(query.value("machine").toInt(), query.value("service").toInt())->second);
-        QSharedPointer<Machine> machine = QSharedPointer<Machine>::create(get_machine(query.value("machine").toInt())->second);
+        QSharedPointer<User> customer = get_user(query.value("customer").toInt());
+        QSharedPointer<Service> service = get_service(query.value("machine").toInt(), query.value("service").toInt());
+        QSharedPointer<Machine> machine = get_machine(query.value("machine").toInt());
         QDate date_start = query.value("date_start").toDate();
-        orders.push_back({order_id, Order{date_start, customer, machine, service}});
+        orders.push_back({date_start, customer, machine, service, order_id});
     }
     return orders;
 }
 
-QVector<QPair<int, Order>> db::get_machine_orders(const int& machine_id) {
+QVector<OrderSql> db::get_machine_orders(const int& machine_id) {
     QSqlQuery query{db::current_pool()};
     query.prepare(R"!!!(
                     SELECT *
@@ -349,7 +349,7 @@ QVector<QPair<int, Order>> db::get_machine_orders(const int& machine_id) {
     query.bindValue(":machine_id", machine_id);
     if (!query.exec())
         throw std::runtime_error{"Failed to select active orders"};
-    QVector<QPair<int, Order>> orders;
+    QVector<OrderSql> orders;
     while (query.next()) {
         int order_id = query.value("id").toInt();
         orders.push_back(*db::get_order(order_id));

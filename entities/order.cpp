@@ -110,3 +110,7 @@ OrderSql::OrderSql(bool&& complete, QDate&& date_start, QDate&& date_end, QStrin
     : Order{std::move(complete), std::move(date_start), std::move(date_end), std::move(description),
              std::move(customer), std::move(executor), std::move(machine), std::move(service)}
     , SqlObject{id} {}
+
+OrderSql::OrderSql(Order&& order, const int& id)
+    : Order{order}
+    , SqlObject{id} {}

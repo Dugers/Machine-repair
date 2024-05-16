@@ -68,12 +68,11 @@ QString AddUserWindow::generate_login(QString name) {
     AddUserWindow::validate_name(name);
     name = name.replace(' ', '_').toLower();
     translit(name);
-    QSharedPointer<QPair<int, User>> user = db::get_user(name);
+    QSharedPointer<UserSql> user = db::get_user(name);
     int add_index = 0;
     while (user) {
         ++add_index;
         user = db::get_user(name + QString::number(add_index));
-        qDebug() << name + QString::number(add_index);
     }
     if (add_index != 0)
         name += QString::number(add_index);

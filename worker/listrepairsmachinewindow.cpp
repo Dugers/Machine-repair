@@ -16,19 +16,19 @@ ListRepairsMachineWindow::ListRepairsMachineWindow(const int& user_id, const int
         ui->orders_table_widget->setColumnWidth(i, ui->orders_table_widget->width()/ui->orders_table_widget->columnCount());
     ui->orders_table_widget->setRowCount(mOrders.size());
     for (int i = 0; i < mOrders.size(); ++i) {
-        if (!mOrders[i].second.service())
+        if (!mOrders[i].service())
             throw std::invalid_argument{"Не получилось отобразить данные заказа"};
-        ui->orders_table_widget->setItem(i, 0, new QTableWidgetItem{mOrders[i].second.service()->name()});
-        ui->orders_table_widget->setItem(i, 1, new QTableWidgetItem{mOrders[i].second.date_start().toString("dd.MM.yyyy")});
-        if (mOrders[i].second.complete()) {
-            if (mOrders[i].second.date_end().isNull())
+        ui->orders_table_widget->setItem(i, 0, new QTableWidgetItem{mOrders[i].service()->name()});
+        ui->orders_table_widget->setItem(i, 1, new QTableWidgetItem{mOrders[i].date_start().toString("dd.MM.yyyy")});
+        if (mOrders[i].complete()) {
+            if (mOrders[i].date_end().isNull())
                 throw std::invalid_argument{"Не получилось отобразить данные заказа"};
-            ui->orders_table_widget->setItem(i, 2, new QTableWidgetItem{mOrders[i].second.date_end().toString("dd.MM.yyyy")});
+            ui->orders_table_widget->setItem(i, 2, new QTableWidgetItem{mOrders[i].date_end().toString("dd.MM.yyyy")});
             ui->orders_table_widget->setItem(i, 3, new QTableWidgetItem{"Выполнен"});
         }
         else {
             ui->orders_table_widget->setItem(i, 2, new QTableWidgetItem{"Еще не завершен"});
-            if (mOrders[i].second.executor())
+            if (mOrders[i].executor())
                 ui->orders_table_widget->setItem(i, 3, new QTableWidgetItem{"Выполняется"});
             else
                 ui->orders_table_widget->setItem(i, 3, new QTableWidgetItem{"Поиск исполнителя"});
@@ -46,7 +46,7 @@ void ListRepairsMachineWindow::on_about_button_clicked()
     try {
         if (ui->orders_table_widget->currentRow() == -1)
             throw std::runtime_error{"Выберите заказ"};
-        (new AboutOrderWindow{mUser_id, mOrders[ui->orders_table_widget->currentRow()].first})->show();
+        (new AboutOrderWindow{mUser_id, mOrders[ui->orders_table_widget->currentRow()].id()})->show();
         this->close();
     }
     catch (std::exception e) {

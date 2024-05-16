@@ -12,7 +12,7 @@ ClientRepairsWindow::ClientRepairsWindow(const int& user_id, QWidget *parent) :
     ui->setupUi(this);
     auto machines = db::get_machines(mUser_id);
     for (auto const& machine: machines)
-        this->ui->machine_combo_box->addItem(machine.second.name(), machine.first);
+        this->ui->machine_combo_box->addItem(machine.name(), machine.id());
 }
 ClientRepairsWindow::~ClientRepairsWindow()
 {
@@ -58,11 +58,11 @@ void ClientRepairsWindow::on_repair_combo_box_currentIndexChanged(int index)
     try {
         int machine_id = this->ui->machine_combo_box->currentData().toInt();
         int repair_id = this->ui->repair_combo_box->currentData().toInt();
-        QSharedPointer<QPair<int, Service>> service = db::get_service(machine_id, repair_id);
+        QSharedPointer<ServiceSql> service = db::get_service(machine_id, repair_id);
         if (!service)
             throw std::runtime_error{"Произошла ошибка в получении данных об услуге"};
-        this->ui->execution_time_line_edit->setText(service->second.durtaion());
-        this->ui->execution_cost_line_edit->setText(QString::number(service->second.price()));
+        this->ui->execution_time_line_edit->setText(service->durtaion());
+        this->ui->execution_cost_line_edit->setText(QString::number(service->price()));
         this->ui->order_button->setEnabled(true);
     }
     catch (std::exception e) {
@@ -78,10 +78,10 @@ void ClientRepairsWindow::on_machine_combo_box_currentIndexChanged(int index)
 {
     try {
         int machine_id = this->ui->machine_combo_box->currentData().toInt();
-        QVector<QPair<int, Service>> repairs = db::get_services(machine_id);
+        QVector<ServiceSql> repairs = db::get_services(machine_id);
         this->ui->repair_combo_box->clear();
         for (auto const& repair: repairs)
-            this->ui->repair_combo_box->addItem(repair.second.name(), repair.first);
+            this->ui->repair_combo_box->addItem(repair.name(), repair.id());
         this->ui->repair_combo_box->setEnabled(true);
     }
     catch (std::exception e) {

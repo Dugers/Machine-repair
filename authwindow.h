@@ -16,7 +16,7 @@ class AuthWindow : public QMainWindow
 public:
     explicit AuthWindow(QWidget *parent = nullptr);
     ~AuthWindow();
-    static QSharedPointer<QPair<int, User>> check_auth(const QString& login, const QString& password);
+    static QSharedPointer<UserSql> check_auth(const QString& login, const QString& password);
 private slots:
     void on_auth_button_clicked();
 

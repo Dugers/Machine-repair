@@ -2,7 +2,7 @@
 #include "ui_clientareawindow.h"
 #include "clientmachineswindow.h"
 #include "clientrepairswindow.h"
-#include "../authwindow_.h"
+#include "../authwindow.h"
 
 ClientAreaWindow::ClientAreaWindow(const int& user_id, QWidget *parent) :
     QWidget(parent),
