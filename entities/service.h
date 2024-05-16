@@ -55,12 +55,10 @@ public:
 };
 
 
-//class ServiceSql :
-//    public Service,
-//    public BaseSqlObject
-//{
-//    ServiceSql(const int& id, const QString& name);
-//    ServiceSql(const int& id, QString&& name) noexcept;
-//};
+class ServiceSql : public Service, public SqlObject {
+public:
+    ServiceSql(const QString& name, const Duration& duration, const double& price, const int& id);
+    ServiceSql(QString&& name, Duration&& duration, double&& price, int&& id) noexcept;
+};
 
 #endif // SERVICE_H

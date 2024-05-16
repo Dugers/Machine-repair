@@ -90,3 +90,23 @@ const QSharedPointer<const Service>& Order::service() const {
 const bool& Order::complete() const{
     return mComplete;
 }
+
+// ============================== SQL TYPES ==============================
+
+OrderSql::OrderSql(const bool& complete, const QDate& date_start, const QDate& date_end, const QString& description,
+                   const QSharedPointer<const User>& customer, const QSharedPointer<const User>& executor,
+                   const QSharedPointer<const Machine>& machine, const QSharedPointer<const Service>& service, const int& id)
+    : Order{complete, date_start, date_end, description, customer, executor, machine, service}
+    , SqlObject{id} {}
+
+OrderSql::OrderSql(const QDate& date_start, const QSharedPointer<const User>& customer,
+                   const QSharedPointer<const Machine>& machine, const QSharedPointer<const Service>& service, const int& id)
+    : Order{date_start, customer, machine, service}
+    , SqlObject{id} {}
+
+OrderSql::OrderSql(bool&& complete, QDate&& date_start, QDate&& date_end, QString&& description,
+                   QSharedPointer<const User>&& customer, QSharedPointer<const User>&& executor,
+                   QSharedPointer<const Machine>&& machine, QSharedPointer<const Service>&& service, int&& id) noexcept
+    : Order{std::move(complete), std::move(date_start), std::move(date_end), std::move(description),
+             std::move(customer), std::move(executor), std::move(machine), std::move(service)}
+    , SqlObject{id} {}

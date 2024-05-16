@@ -53,14 +53,21 @@ public:
     Order& operator=(Order&& order) noexcept = default;
 };
 
-//class OrderSql :
-//        public Order,
-//        public BaseSqlObject
-//{
-//    OrderSql(const int& id, const bool& complete, const QDate& date_start, const QDate& date_end, const QString& description, const QSharedPointer<const User>& customer,
-//    const QSharedPointer<const User>& executor, const QSharedPointer<const Machine>& machine, const QSharedPointer<const Service>& service);
-//    OrderSql(const int& id, const QDate& date_start, const QSharedPointer<const User>& customer,
-//    const QSharedPointer<const Machine>& machine, const QSharedPointer<const Service>& service);
-//};
+class OrderSql :
+    public Order,
+    public SqlObject
+{
+public:
+    OrderSql(const bool& complete, const QDate& date_start, const QDate& date_end, const QString& description,
+             const QSharedPointer<const User>& customer, const QSharedPointer<const User>& executor,
+             const QSharedPointer<const Machine>& machine, const QSharedPointer<const Service>& service, const int& id);
+
+    OrderSql(const QDate& date_start, const QSharedPointer<const User>& customer,
+             const QSharedPointer<const Machine>& machine, const QSharedPointer<const Service>& service, const int& id);
+
+    OrderSql(bool&& complete, QDate&& date_start, QDate&& date_end, QString&& description,
+             QSharedPointer<const User>&& customer, QSharedPointer<const User>&& executor,
+             QSharedPointer<const Machine>&& machine, QSharedPointer<const Service>&& service, int&& id) noexcept;
+};
 
 #endif // ORDER_H

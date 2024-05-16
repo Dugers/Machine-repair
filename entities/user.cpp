@@ -80,3 +80,21 @@ const QVector<QPair<QString, UserRole>>& get_user_roles() {
     static const QVector<QPair<QString, UserRole>> roles = {{"Admin", UserRole::Admin}, {"Worker", UserRole::Worker}, {"Client", UserRole::Client}};
     return roles;
 }
+
+// ============================== SQL TYPES ==============================
+
+UserSql::UserSql(const QString& name, const QString& login, const QString& password, const UserRole& role, const int& id)
+    : User{name, login, password, role}
+    , SqlObject{id}
+{}
+
+UserSql::UserSql(QString&& name, QString&& login, QString&& password, UserRole&& role, int&& id) noexcept
+    : User{std::move(name), std::move(login), std::move(password), std::move(role)}
+    , SqlObject{id}
+{}
+
+UserSql::UserSql(QString&& name, const QString& login, QString&& password, UserRole&& role, int&& id) noexcept
+    : User{std::move(name), login, std::move(password), std::move(role)}
+    , SqlObject{id}
+{}
+

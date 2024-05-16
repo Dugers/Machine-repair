@@ -136,3 +136,15 @@ void Service::set_price(double&& price) noexcept {
 const double& Service::price() const {
     return mPrice;
 }
+
+// ============================== SQL TYPES ==============================
+
+ServiceSql::ServiceSql(const QString& name, const Duration& duration, const double& price, const int& id)
+    : Service{name, duration, price}
+    , SqlObject{id}
+{}
+
+ServiceSql::ServiceSql(QString&& name, Duration&& duration, double&& price, int&& id) noexcept
+    : Service{std::move(name), std::move(duration), std::move(price)}
+    , SqlObject{id}
+{}

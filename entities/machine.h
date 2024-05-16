@@ -21,13 +21,13 @@ public:
         MachineType& operator=(const MachineType& type) = default;
         MachineType& operator=(MachineType&& type) noexcept = default;
     };
-//    class MachineTypeSql :
-//        public MachineType,
-//        public BaseSqlObject
-//    {
-//        MachineTypeSql(const int& id, const QString& name);
-//        MachineTypeSql(const int& id, QString&& name) noexcept;
-//    };
+    class MachineTypeSql :
+        public MachineType,
+        public SqlObject
+    {
+        MachineTypeSql(const int& id, const QString& name);
+        MachineTypeSql(const int& id, QString&& name) noexcept;
+    };
     class MachineBrand {
     private:
         QString mName;
@@ -42,13 +42,13 @@ public:
         MachineBrand& operator=(const MachineBrand& brand) = default;
         MachineBrand& operator=(MachineBrand&& brand) noexcept = default;
     };
-//    class MachineBrandSql :
-//        public MachineBrand,
-//        public BaseSqlObject
-//    {
-//        MachineBrandSql(const int& id, const QString& name);
-//        MachineBrandSql(const int& id, QString&& name) noexcept;
-//    };
+    class MachineBrandSql :
+        public MachineBrand,
+        public SqlObject
+    {
+        MachineBrandSql(const int& id, const QString& name);
+        MachineBrandSql(const int& id, QString&& name) noexcept;
+    };
 private:
     MachineType mType;
     MachineBrand mBrand;
@@ -66,13 +66,13 @@ public:
     MachineMark& operator=(const MachineMark& mark) = default;
     MachineMark& operator=(MachineMark&& mark) noexcept = default;
 };
-//class MachineMarkSql :
-//    public MachineMark,
-//    public BaseSqlObject
-//{
-//    MachineMarkSql(const int& id, const MachineType& type, const MachineBrand& brand);
-//    MachineMarkSql(const int& id, MachineType&& type, MachineBrand&& brand) noexcept;
-//};
+class MachineMarkSql :
+    public MachineMark,
+    public SqlObject
+{
+    MachineMarkSql(const int& id, const MachineType& type, const MachineBrand& brand);
+    MachineMarkSql(const int& id, MachineType&& type, MachineBrand&& brand) noexcept;
+};
 
 class Machine
 {
@@ -97,11 +97,11 @@ public:
     Machine& operator=(Machine&& machine) noexcept = default;
 };
 
-//class MachineSql :
-//    public Machine,
-//    public BaseSqlObject
-//{
-//    MachineSql(const int& id, const QString& name, const QSharedPointer<const User>& owner, const QSharedPointer<const MachineMark>& mark);
-//};
+class MachineSql :
+    public Machine,
+    public SqlObject
+{
+    MachineSql(const int& id, const QString& name, const QSharedPointer<const User>& owner, const QSharedPointer<const MachineMark>& mark);
+};
 
 #endif // MACHINE_H

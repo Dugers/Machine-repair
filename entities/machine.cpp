@@ -78,20 +78,20 @@ const QString& Machine::name() const {
 
 // ============================== SQL TYPES ==============================
 
-//MachineMark::MachineTypeSql::MachineTypeSql(const int& id, const QString& name) :
-//    MachineType{name}, BaseSqlObject{id} {}
-//MachineMark::MachineTypeSql::MachineTypeSql(const int& id, QString&& name) noexcept :
-//    MachineType{std::move(name)}, BaseSqlObject{std::move(id)} {}
+MachineMark::MachineTypeSql::MachineTypeSql(const int& id, const QString& name) :
+    MachineType{name}, SqlObject{id} {}
+MachineMark::MachineTypeSql::MachineTypeSql(const int& id, QString&& name) noexcept :
+    MachineType{std::move(name)}, SqlObject{std::move(id)} {}
 
-//MachineMark::MachineBrandSql::MachineBrandSql(const int& id, const QString& name) :
-//    MachineBrand{name}, BaseSqlObject{id} {}
-//MachineMark::MachineBrandSql::MachineBrandSql(const int& id, QString&& name) noexcept :
-//    MachineBrand{std::move(name)}, BaseSqlObject{std::move(id)} {}
+MachineMark::MachineBrandSql::MachineBrandSql(const int& id, const QString& name) :
+    MachineBrand{name}, SqlObject{id} {}
+MachineMark::MachineBrandSql::MachineBrandSql(const int& id, QString&& name) noexcept :
+    MachineBrand{std::move(name)}, SqlObject{std::move(id)} {}
 
-//MachineMarkSql::MachineMarkSql(const int& id, const MachineType& type, const MachineBrand& brand) :
-//    MachineMark{type, brand}, BaseSqlObject{id} {}
-//MachineMarkSql::MachineMarkSql(const int& id, MachineType&& type, MachineBrand&& brand) noexcept :
-//    MachineMark{std::move(type), std::move(brand)}, BaseSqlObject{std::move(id)} {}
+MachineMarkSql::MachineMarkSql(const int& id, const MachineType& type, const MachineBrand& brand) :
+    MachineMark{type, brand}, SqlObject{id} {}
+MachineMarkSql::MachineMarkSql(const int& id, MachineType&& type, MachineBrand&& brand) noexcept :
+    MachineMark{std::move(type), std::move(brand)}, SqlObject{std::move(id)} {}
 
-//MachineSql::MachineSql(const int& id, const QString& name, const QSharedPointer<const User>& owner, const QSharedPointer<const MachineMark>& mark) :
-//    Machine{name, owner, mark}, BaseSqlObject{id} {}
+MachineSql::MachineSql(const int& id, const QString& name, const QSharedPointer<const User>& owner, const QSharedPointer<const MachineMark>& mark) :
+    Machine{name, owner, mark}, SqlObject{id} {}

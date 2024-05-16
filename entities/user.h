@@ -44,11 +44,14 @@ public:
     static QString hash_password(const QString& password);
 };
 
-//class UserSql :
-//    public User,
-//    public BaseSqlObject
-//{
-//    UserSql(const int& id, const QString& name, const QString& login, const QString& password, const UserRole& role);
-//};
+class UserSql :
+    public User,
+    public SqlObject
+{
+public:
+    UserSql(const QString& name, const QString& login, const QString& password, const UserRole& role, const int& id);
+    UserSql(QString&& name, QString&& login, QString&& password, UserRole&& role, int&& id) noexcept;
+    UserSql(QString&& name, const QString& login, QString&& password, UserRole&& role, int&& id) noexcept;
+};
 
 #endif // USER_H
