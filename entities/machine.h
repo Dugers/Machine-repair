@@ -25,8 +25,8 @@ public:
         public MachineType,
         public SqlObject
     {
-        MachineTypeSql(const int& id, const QString& name);
-        MachineTypeSql(const int& id, QString&& name) noexcept;
+        MachineTypeSql(const QString& name, const int& id);
+        MachineTypeSql(QString&& name, const int& id) noexcept;
     };
     class MachineBrand {
     private:
@@ -46,8 +46,8 @@ public:
         public MachineBrand,
         public SqlObject
     {
-        MachineBrandSql(const int& id, const QString& name);
-        MachineBrandSql(const int& id, QString&& name) noexcept;
+        MachineBrandSql(const QString& name, const int& id);
+        MachineBrandSql(QString&& name, const int& id) noexcept;
     };
 private:
     MachineType mType;
@@ -70,8 +70,8 @@ class MachineMarkSql :
     public MachineMark,
     public SqlObject
 {
-    MachineMarkSql(const int& id, const MachineType& type, const MachineBrand& brand);
-    MachineMarkSql(const int& id, MachineType&& type, MachineBrand&& brand) noexcept;
+    MachineMarkSql(const MachineType& type, const MachineBrand& brand, const int& id);
+    MachineMarkSql(MachineType&& type, MachineBrand&& brand, const int& id) noexcept;
 };
 
 class Machine
@@ -101,7 +101,7 @@ class MachineSql :
     public Machine,
     public SqlObject
 {
-    MachineSql(const int& id, const QString& name, const QSharedPointer<const User>& owner, const QSharedPointer<const MachineMark>& mark);
+    MachineSql(const QString& name, const QSharedPointer<const User>& owner, const QSharedPointer<const MachineMark>& mark, const int& id);
 };
 
 #endif // MACHINE_H

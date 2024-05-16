@@ -78,20 +78,20 @@ const QString& Machine::name() const {
 
 // ============================== SQL TYPES ==============================
 
-MachineMark::MachineTypeSql::MachineTypeSql(const int& id, const QString& name) :
+MachineMark::MachineTypeSql::MachineTypeSql(const QString& name, const int& id) :
     MachineType{name}, SqlObject{id} {}
-MachineMark::MachineTypeSql::MachineTypeSql(const int& id, QString&& name) noexcept :
+MachineMark::MachineTypeSql::MachineTypeSql(QString&& name, const int& id) noexcept :
     MachineType{std::move(name)}, SqlObject{std::move(id)} {}
 
-MachineMark::MachineBrandSql::MachineBrandSql(const int& id, const QString& name) :
+MachineMark::MachineBrandSql::MachineBrandSql(const QString& name, const int& id) :
     MachineBrand{name}, SqlObject{id} {}
-MachineMark::MachineBrandSql::MachineBrandSql(const int& id, QString&& name) noexcept :
+MachineMark::MachineBrandSql::MachineBrandSql(QString&& name, const int& id) noexcept :
     MachineBrand{std::move(name)}, SqlObject{std::move(id)} {}
 
-MachineMarkSql::MachineMarkSql(const int& id, const MachineType& type, const MachineBrand& brand) :
+MachineMarkSql::MachineMarkSql(const MachineType& type, const MachineBrand& brand, const int& id) :
     MachineMark{type, brand}, SqlObject{id} {}
-MachineMarkSql::MachineMarkSql(const int& id, MachineType&& type, MachineBrand&& brand) noexcept :
+MachineMarkSql::MachineMarkSql(MachineType&& type, MachineBrand&& brand, const int& id) noexcept :
     MachineMark{std::move(type), std::move(brand)}, SqlObject{std::move(id)} {}
 
-MachineSql::MachineSql(const int& id, const QString& name, const QSharedPointer<const User>& owner, const QSharedPointer<const MachineMark>& mark) :
+MachineSql::MachineSql(const QString& name, const QSharedPointer<const User>& owner, const QSharedPointer<const MachineMark>& mark, const int& id) :
     Machine{name, owner, mark}, SqlObject{id} {}
