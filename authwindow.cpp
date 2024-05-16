@@ -154,6 +154,7 @@ void AuthWindow::on_drop_action_triggered()
 
 void AuthWindow::open_user_window(UserRole role, const int& user_id) {
     QWidget* window = nullptr;
+    qDebug() << str_by_role(role);
     switch(role) {
         case (UserRole::Client): {
             window = new ClientAreaWindow{user_id};
@@ -161,10 +162,12 @@ void AuthWindow::open_user_window(UserRole role, const int& user_id) {
         }
         case (UserRole::Admin): {
             window = new AdminAreaWindow{user_id};
+            break;
 
         }
         case (UserRole::Worker): {
             window = new WorkerAreaWindow{user_id};
+            break;
         }
     }
     if (window) {
