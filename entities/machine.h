@@ -1,7 +1,7 @@
 #ifndef MACHINE_H
 #define MACHINE_H
 #include <QString>
-#include <QSharedPointer>
+#include "relationship_wrapper.h"
 #include "user.h"
 
 class MachineMark {
