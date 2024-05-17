@@ -98,7 +98,7 @@ QSharedPointer<MachineMarkSql> db::get_machine_mark(const int& mark_id) {
         return {};
     int brand_id = query.value(query.record().indexOf("brand")).toInt();
     int type_id = query.value(query.record().indexOf("type")).toInt();
-    return QSharedPointer<MachineMarkSql>::create(std::move(*get_machine_type(type_id)), std::move(*get_machine_brand(brand_id)), mark_id);
+    return QSharedPointer<MachineMarkSql>::create(*get_machine_type(type_id), *get_machine_brand(brand_id), mark_id);
 }
 
 QSharedPointer<MachineMarkSql> db::get_machine_mark(const int& type_id, const int& brand_id) {
@@ -126,7 +126,7 @@ QSharedPointer<MachineSql> db::get_machine(const int& machine_id) {
     QSharedPointer<UserSql> owner = db::get_user(owner_id);
     QString name = query.value(query.record().indexOf("name")).toString();
     QSharedPointer<MachineMarkSql> mark = db::get_machine_mark(query.value(query.record().indexOf("mark")).toInt());
-    return QSharedPointer<MachineSql>::create(std::move(name), owner, mark, machine_id);
+    return QSharedPointer<MachineSql>::create(std::move(name), *owner, *mark, machine_id);
 }
 
 QSharedPointer<MachineSql> db::get_machine_by_order(const int& order_id) {
@@ -206,8 +206,12 @@ QVector<MachineSql> db::get_machines(const int& owner_id) {
     while (query.next()) {
         int machine_id = query.value(query.record().indexOf("id")).toInt();
         QString name = query.value(query.record().indexOf("name")).toString();
+        if (!owner)
+            qDebug() << "Нету юзера";
         QSharedPointer<MachineMarkSql> mark = db::get_machine_mark(query.value(query.record().indexOf("mark")).toInt());
-        machines.push_back({std::move(name), std::move(owner), std::move(mark), machine_id});
+        if (!owner)
+            qDebug() << "Нету марки";
+        machines.push_back({name, owner, mark, machine_id});
     }
     return machines;
 }

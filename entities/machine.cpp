@@ -24,29 +24,29 @@ const QString& MachineMark::MachineBrand::name() const {
     return mName;
 }
 
-MachineMark::MachineMark(const MachineType& type, const MachineBrand& brand) : mType{type}, mBrand{brand} {}
-MachineMark::MachineMark(MachineType&& type, MachineBrand&& brand) noexcept : mType{std::move(type)}, mBrand{std::move(brand)} {};
-void MachineMark::set_type(const MachineType& type) {
+MachineMark::MachineMark(const relationship_wrapper<MachineType>& type, const relationship_wrapper<MachineBrand>& brand) : mType{type}, mBrand{brand} {}
+MachineMark::MachineMark(relationship_wrapper<MachineType>&& type, relationship_wrapper<MachineBrand>&& brand) noexcept : mType{std::move(type)}, mBrand{std::move(brand)} {};
+void MachineMark::set_type(const relationship_wrapper<MachineType>& type) {
     mType = type;
 }
-void MachineMark::set_type(MachineType&& type) noexcept {
+void MachineMark::set_type(relationship_wrapper<MachineType>&& type) noexcept {
     mType = std::move(type);
 }
-void MachineMark::set_brand(const MachineBrand& brand) {
+void MachineMark::set_brand(const relationship_wrapper<MachineBrand>& brand) {
     mBrand = brand;
 }
-void MachineMark::set_brand(MachineBrand&& brand) noexcept {
+void MachineMark::set_brand(relationship_wrapper<MachineBrand>&& brand) noexcept {
     mBrand = std::move(brand);
 }
-const MachineMark::MachineType& MachineMark::type() const {
+const relationship_wrapper<MachineMark::MachineType>& MachineMark::type() const {
     return mType;
 }
-const MachineMark::MachineBrand& MachineMark::brand() const {
+const relationship_wrapper<MachineMark::MachineBrand>& MachineMark::brand() const {
     return mBrand;
 }
 
 
-Machine::Machine(const QString& name, const QSharedPointer<const User>& owner, const QSharedPointer<const MachineMark>& mark) :
+Machine::Machine(const QString& name, const relationship_wrapper<const User>& owner, const relationship_wrapper<const MachineMark>& mark) :
     mName{name}, mOwner{owner}, mMark{mark} {}
 void Machine::set_name(const QString& name) {
     mName = name;
@@ -54,22 +54,22 @@ void Machine::set_name(const QString& name) {
 void Machine::set_name(QString&& name) noexcept {
     mName = std::move(name);
 }
-void Machine::set_owner(const QSharedPointer<const User>& owner) {
+void Machine::set_owner(const relationship_wrapper<const User>& owner) {
     mOwner = owner;
 }
-void Machine::set_owner(QSharedPointer<const User>&& owner) {
+void Machine::set_owner(relationship_wrapper<const User>&& owner) {
     mOwner = std::move(owner);
 }
-void Machine::set_mark(const QSharedPointer<const MachineMark>& mark) {
+void Machine::set_mark(const relationship_wrapper<const MachineMark>& mark) {
     mMark = mark;
 }
-void Machine::set_mark(QSharedPointer<const MachineMark>&& mark) {
+void Machine::set_mark(relationship_wrapper<const MachineMark>&& mark) {
     mMark = std::move(mark);
 }
-const QSharedPointer<const MachineMark>& Machine::mark() const {
+const relationship_wrapper<const MachineMark>& Machine::mark() const {
     return mMark;
 }
-const QSharedPointer<const User>& Machine::owner() const {
+const relationship_wrapper<const User>& Machine::owner() const {
     return mOwner;
 }
 const QString& Machine::name() const {
@@ -88,10 +88,10 @@ MachineMark::MachineBrandSql::MachineBrandSql(const QString& name, const int& id
 MachineMark::MachineBrandSql::MachineBrandSql(QString&& name, const int& id) noexcept :
     MachineBrand{std::move(name)}, SqlObject{std::move(id)} {}
 
-MachineMarkSql::MachineMarkSql(const MachineType& type, const MachineBrand& brand, const int& id) :
+MachineMarkSql::MachineMarkSql(const relationship_wrapper<MachineType>& type, const relationship_wrapper<MachineBrand>& brand, const int& id) :
     MachineMark{type, brand}, SqlObject{id} {}
-MachineMarkSql::MachineMarkSql(MachineType&& type, MachineBrand&& brand, const int& id) noexcept :
+MachineMarkSql::MachineMarkSql(relationship_wrapper<MachineType>&& type, relationship_wrapper<MachineBrand>&& brand, const int& id) noexcept :
     MachineMark{std::move(type), std::move(brand)}, SqlObject{std::move(id)} {}
 
-MachineSql::MachineSql(const QString& name, const QSharedPointer<const User>& owner, const QSharedPointer<const MachineMark>& mark, const int& id) :
+MachineSql::MachineSql(const QString& name, const relationship_wrapper<const User>& owner, const relationship_wrapper<const MachineMark>& mark, const int& id) :
     Machine{name, owner, mark}, SqlObject{id} {}

@@ -13,65 +13,52 @@ public:
 
 
 template <typename T>
-class relationship_wrapper
-{
-    std::function<T&()> mInitializer;
-    QSharedPointer<T> mObject;
+class relationship_wrapper {
+private:
+    mutable QSharedPointer<T> mObject;
+    std::function<void(QSharedPointer<T>&)> mInitializer;
+
 public:
     relationship_wrapper() = default;
     relationship_wrapper(const relationship_wrapper&) = default;
-    relationship_wrapper(relationship_wrapper&&) = default;
-    relationship_wrapper(QSharedPointer<T> specific_object) :
-        mObject{specific_object},
-        mInitializer{make_simple_initializer(*specific_object)}
-    {}
-    relationship_wrapper(const std::function<T&(QSharedPointer<T>& object)>& initializer) :
-        mInitializer{initializer}
-    {}
-    relationship_wrapper(const std::function<T&(QSharedPointer<T>& object)>&& initializer) :
-        mInitializer{std::move(initializer)}
-    {}
-    T& get() const {
-        if (!mInitializer) {
-            if (mObject)
-                return *mObject;
-            throw initializer_is_empty{"initializer was not set"};
-        }
-        return mInitializer(mObject);
-    }
+    relationship_wrapper(relationship_wrapper&&) noexcept = default;
+    template <typename U>
+    relationship_wrapper(QSharedPointer<U>& object) : mObject{object} {}
+    relationship_wrapper(std::function<void(QSharedPointer<T>&)> initializer) : mInitializer(initializer) {}
 
-    bool empty() const noexcept {
-        return !mObject && !mInitializer;
-    }
-    void set(const std::function<T&(QSharedPointer<T>& object)>& initializer) {
-        mInitializer = initializer;
-    }
-    void set(std::function<T&(QSharedPointer<T>& object)>&& initializer) {
-        mInitializer = std::move(initializer);
-    }
-    explicit operator bool() const noexcept {
-        return !empty();
-    }
-    bool operator !() const noexcept {
-        return empty(); }
-    T& operator*() const {
-        return get();
-    }
-    T* operator->() const noexcept {
-        return &get();
-    }
     relationship_wrapper& operator=(const relationship_wrapper&) = default;
     relationship_wrapper& operator=(relationship_wrapper&&) = default;
-    static std::function<T&(QSharedPointer<T>& object)> make_simple_initializer(T specific_object);
+
+    const T& get() const {
+        if (!mObject) {
+            if (mInitializer)
+                mInitializer(mObject);
+            else
+                throw initializer_is_empty{"initializer was not set"};
+        }
+        return *mObject;
+    }
+
+    bool empty() const noexcept { return !mObject; }
+    explicit operator bool() const noexcept { return !empty(); }
+    bool operator !() const noexcept { return empty(); }
+    const T& operator*() const { return get(); }
+    const T* operator->() const { return &get(); }
+//    static std::function<void(QSharedPointer<T>&)> make_simple_initializer(const T& specific_object);
 };
 
-template <typename T>
-std::function<T&(QSharedPointer<T>& object)> relationship_wrapper<T>::make_simple_initializer(T specific_object) {
-    return [specific_object] (QSharedPointer<T>& object) -> T& {
-        if (!object)
-            object = QSharedPointer<T>::create(specific_object);
-        return *object;
-    };
-}
+//template <typename T>
+//std::function<void(QSharedPointer<T>&)> relationship_wrapper<T>::make_simple_initializer(const T& specific_object) {
+//    return [specific_object](QSharedPointer<T>& ptr) {
+//        try {
+//        if (!ptr)
+//            ptr = QSharedPointer<T>::create(specific_object);
+//        }
+//        catch (std::exception) {
+//            throw std::runtime_error{"Все плохо"};
+//        }
+//    };
+//}
+
 
 #endif // RELATIONSHIP_WRAPPER_H

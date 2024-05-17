@@ -33,8 +33,8 @@ AboutOrderWindow::AboutOrderWindow(const int& user_id, const int& order_id, QWid
     ui->date_start_order_line_edit->setText(mOrder.date_start().toString("dd.MM.yyyy"));
     ui->name_service_line_edit->setText(mOrder.service()->name());
     ui->price_service_line_edit->setText(QString::number(mOrder.service()->price()));
-    ui->type_machine_line_edit->setText(mOrder.machine()->mark()->type().name());
-    ui->brand_machine_line_edit->setText(mOrder.machine()->mark()->brand().name());
+    ui->type_machine_line_edit->setText(mOrder.machine()->mark()->type()->name());
+    ui->brand_machine_line_edit->setText(mOrder.machine()->mark()->brand()->name());
 }
 
 AboutOrderWindow::~AboutOrderWindow()

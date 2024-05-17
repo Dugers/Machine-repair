@@ -34,7 +34,7 @@ void AddMachineWindow::on_add_button_clicked()
             db::create_machine_mark(type_id, brand_id);
             mark = db::get_machine_mark(type_id, brand_id);
         }
-        if (!db::create_machine(Machine{name, nullptr, nullptr}, mUser_id, mark->id()))
+        if (!db::create_machine(Machine{name, {}, {}}, mUser_id, mark->id()))
             throw std::runtime_error{"Не удалось выполнить операцию, возможные причины:\n1) Проблемы с базой данных \n2) Станок с таким именем уже есть"};
         (new ClientMachinesWindow{mUser_id})->show();
         this->close();

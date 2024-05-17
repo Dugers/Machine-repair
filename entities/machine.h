@@ -52,19 +52,19 @@ public:
         MachineBrandSql(QString&& name, const int& id) noexcept;
     };
 private:
-    MachineType mType;
-    MachineBrand mBrand;
+    relationship_wrapper<MachineType> mType;
+    relationship_wrapper<MachineBrand> mBrand;
 public:
-    MachineMark(const MachineType& type, const MachineBrand& brand);
-    MachineMark(MachineType&& type, MachineBrand&& brand) noexcept;
+    MachineMark(const relationship_wrapper<MachineType>& type, const relationship_wrapper<MachineBrand>& brand);
+    MachineMark(relationship_wrapper<MachineType>&& type, relationship_wrapper<MachineBrand>&& brand) noexcept;
     MachineMark(const MachineMark& mark) = default;
     MachineMark(MachineMark&& mark) noexcept = default;
-    void set_type(const MachineType& type);
-    void set_type(MachineType&& type) noexcept;
-    void set_brand(const MachineBrand& brand);
-    void set_brand(MachineBrand&& brand) noexcept;
-    const MachineType& type() const;
-    const MachineBrand& brand() const;
+    void set_type(const relationship_wrapper<MachineType>& type);
+    void set_type(relationship_wrapper<MachineType>&& type) noexcept;
+    void set_brand(const relationship_wrapper<MachineBrand>& brand);
+    void set_brand(relationship_wrapper<MachineBrand>&& brand) noexcept;
+    const relationship_wrapper<MachineType>& type() const;
+    const relationship_wrapper<MachineBrand>& brand() const;
     MachineMark& operator=(const MachineMark& mark) = default;
     MachineMark& operator=(MachineMark&& mark) noexcept = default;
 };
@@ -73,28 +73,28 @@ class MachineMarkSql :
     public SqlObject
 {
 public:
-    MachineMarkSql(const MachineType& type, const MachineBrand& brand, const int& id);
-    MachineMarkSql(MachineType&& type, MachineBrand&& brand, const int& id) noexcept;
+    MachineMarkSql(const relationship_wrapper<MachineType>& type, const relationship_wrapper<MachineBrand>& brand, const int& id);
+    MachineMarkSql(relationship_wrapper<MachineType>&& type, relationship_wrapper<MachineBrand>&& brand, const int& id) noexcept;
 };
 
 class Machine
 {
 private:
     QString mName;
-    QSharedPointer<const User> mOwner;
-    QSharedPointer<const MachineMark> mMark;
+    relationship_wrapper<const User> mOwner;
+    relationship_wrapper<const MachineMark> mMark;
 public:
-    Machine(const QString& name, const QSharedPointer<const User>& owner, const QSharedPointer<const MachineMark>& mark);
+    Machine(const QString& name, const relationship_wrapper<const User>& owner, const relationship_wrapper<const MachineMark>& mark);
     Machine(const Machine& machine) = default;
     Machine(Machine&& machine) noexcept = default;
     void set_name(const QString& name);
     void set_name(QString&& name) noexcept;
-    void set_owner(const QSharedPointer<const User>& owner);
-    void set_owner(QSharedPointer<const User>&& owner);
-    void set_mark(const QSharedPointer<const MachineMark>& mark);
-    void set_mark(QSharedPointer<const MachineMark>&& mark);
-    const QSharedPointer<const MachineMark>& mark() const;
-    const QSharedPointer<const User>& owner() const;
+    void set_owner(const relationship_wrapper<const User>& owner);
+    void set_owner(relationship_wrapper<const User>&& owner);
+    void set_mark(const relationship_wrapper<const MachineMark>& mark);
+    void set_mark(relationship_wrapper<const MachineMark>&& mark);
+    const relationship_wrapper<const MachineMark>& mark() const;
+    const relationship_wrapper<const User>& owner() const;
     const QString& name() const;
     Machine& operator=(const Machine& machine) = default;
     Machine& operator=(Machine&& machine) noexcept = default;
@@ -105,7 +105,7 @@ class MachineSql :
     public SqlObject
 {
 public:
-    MachineSql(const QString& name, const QSharedPointer<const User>& owner, const QSharedPointer<const MachineMark>& mark, const int& id);
+    MachineSql(const QString& name, const relationship_wrapper<const User>& owner, const relationship_wrapper<const MachineMark>& mark, const int& id);
 };
 
 #endif // MACHINE_H

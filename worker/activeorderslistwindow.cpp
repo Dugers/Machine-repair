@@ -20,8 +20,8 @@ ActiveOrdersListWindow::ActiveOrdersListWindow(const int& user_id, QWidget *pare
             throw std::invalid_argument{"Не получилось отобразить данные заказа"};
         ui->orders_table_widget->setRowCount(ui->orders_table_widget->rowCount()+1);
         int row_index = ui->orders_table_widget->rowCount() - 1;
-        ui->orders_table_widget->setItem(row_index, 0, new QTableWidgetItem{active_order.machine()->mark()->type().name()});
-        ui->orders_table_widget->setItem(row_index, 1, new QTableWidgetItem{active_order.machine()->mark()->brand().name()});
+        ui->orders_table_widget->setItem(row_index, 0, new QTableWidgetItem{active_order.machine()->mark()->type()->name()});
+        ui->orders_table_widget->setItem(row_index, 1, new QTableWidgetItem{active_order.machine()->mark()->brand()->name()});
         ui->orders_table_widget->setItem(row_index, 2, new QTableWidgetItem{active_order.service()->name()});
     }
 }
