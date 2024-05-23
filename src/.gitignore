@@ -78,3 +78,7 @@ config.ini
 
 *.docx
 *.doc
+
+# settings files
+
+*.pro.user
