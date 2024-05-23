@@ -6,11 +6,11 @@
 
 namespace config {
     namespace db {
-        #ifdef QT_DEBUG
-              QString config_path = "../machines/config.ini";
-        #else
-              QString config_path = "config.ini";
-        #endif
+    #ifdef QT_DEBUG
+        QString config_path = "../../machine/src/config.ini";
+    #else
+        QString config_path = "config.ini";
+    #endif
         QSettings settings(config_path, QSettings::IniFormat);
         QString HOSTNAME = settings.value("db/HOSTNAME").toString();
         QString DBNAME = settings.value("db/DBNAME").toString();
