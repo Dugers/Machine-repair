@@ -1,0 +1,42 @@
+@startuml
+
+actor Пользователь as user
+
+entity "База данных" as db
+
+boundary "Окно авторизации" as auth_screen
+boundary "Личный кабиент клиента" as client_cabinet_screen
+boundary "Личный кабиент работника" as worker_cabinet_screen
+boundary "Личный кабиент администратора" as admin_cabinet_screen
+
+control "Получить пользователя из базы данных" as get_user_from_db
+control "Проверить правильность\n логина и пароля и \n получить роль пользователя" as check_user
+control "Открыть окно личного кабинета\n соответствующего роли\n пользователя" as open_user_cabinet #green
+control "Выдать ошибку" as show_error #red
+
+user --> auth_screen : "Пользователь запустил \nприложение первый раз\n или вышел из учетной записи"
+auth_screen --> show_error : " Пользователь нажал кнопку Войти\nпри этом одно или более\nполей пустые"
+auth_screen --> check_user : " Пользователь нажал кнопку Войти"
+check_user --> get_user_from_db
+check_user --> show_error : "Пользователь с таким сочетанием\nлогина и пароля \nне найден в базе данных"
+check_user --> open_user_cabinet : "Найден пользователь с таким\nсочетанием логина и пароля"
+get_user_from_db --> db
+open_user_cabinet --> client_cabinet_screen
+open_user_cabinet --> worker_cabinet_screen
+open_user_cabinet --> admin_cabinet_screen
+
+note as scenario
+Главная последовательность:
+    1) Пользователь заполняет поля "Логин" и "Пароль",
+        нажимает кнопку "Войти"
+    2) Пользователь идентифицируется
+             В случае успеха открывается
+             личный кабинет соответствующий его роли
+
+             В случае неудачи выводится ошибка
+             которая отображает с чем связана проблема
+        
+end note
+
+
+@enduml

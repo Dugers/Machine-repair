@@ -1,0 +1,78 @@
+@startuml
+
+hide empty members
+
+enum UserRole {
+  Admin
+  Client
+  Worker
+}
+class DB {
+  + DeleteUser (id)
+  + List[Users] GetUsers ()
+  + CreateUser (Users)
+  + EditUser (Users)
+}
+class AuthWindow {
+  + AuthButtonClick()
+  + UserRole CheckAuth(login, password)
+}
+ 
+Entity Users
+
+Interface PersonalAreaWindow {
+  + LogoutButtonClick()
+}
+
+class AdminAreaWindow {
+  + AdminAreaWindow(Users)
+  + AddUserButtonClick()
+  + EditUserButtonClick()
+  + LogoutButtonClick()
+}
+
+class ListUsersWindow {
+  + ListUsersWindow(Users)
+  + EditButtonClick()
+  + DeleteButtonClick()
+  + GoToAreaButtonClick()
+}
+
+class EditUserWindow {
+  + EditUserWindow(Users)
+  + UserRoleSelect()
+  + SaveButtonClick()
+  + CheckEdit()
+  + GoToAreaButtonClick()
+}
+
+class AddUserWindow {
+  + ListUsersWindow(Users)
+  + UserRoleSelect() 
+  + CheckAdd()
+  + string GenerateUserLogin(first_name, second_name, third_name)
+  + string GenerateUserPassword()
+  + GoToAreaButtonClick()
+  + AddButtonClick()
+}
+
+class DeleteUserWindow {
+  DeleteUserWindow(Users)
+  YesButtonClick()
+  NoButtonClick()
+}
+
+AuthWindow --> DB
+DB --> Users
+AuthWindow --> UserRole
+AuthWindow <--> PersonalAreaWindow
+AdminAreaWindow --|> PersonalAreaWindow
+AdminAreaWindow <--> ListUsersWindow
+AdminAreaWindow <--> AddUserWindow
+EditUserWindow --> AdminAreaWindow
+ListUsersWindow --> EditUserWindow
+ListUsersWindow <--> DeleteUserWindow
+DeleteUserWindow --> AdminAreaWindow
+
+
+@enduml

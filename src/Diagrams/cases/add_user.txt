@@ -1,0 +1,42 @@
+@startuml
+
+actor Администратор as admin
+
+entity "База данных" as db
+
+boundary "Добавление пользователя" as add_user_screen
+
+control "Проверить корректность полей" as check_fields
+control "Сгенерировать логин на основе ФИО" as generate_login
+control "Сгенерировать пароль" as generate_password
+control "Добавить пользователя" as add_user
+control "Отобразить ошибку" as show_error #red
+control "Показать пользователю окно с логином и паролем" as show_user #green
+
+admin --> add_user_screen
+add_user_screen --> check_fields : "Пользователь нажал кнопку Добавить"
+check_fields --> add_user : "Поля заполнены корректно"
+add_user --> generate_login : "Поле с логином пустое"
+add_user --> generate_password : "Поле с паролем пустое"
+generate_login --> db
+add_user --> db
+add_user --> show_error
+add_user --> show_user : "Пользователь успешно добавлен"
+
+ 
+note as scenario
+Главная последовательность:
+    1) Администратор переходит в окно
+        добавления пользователя
+    2) Заполняет обязательные поля:
+        ФИО пользователя
+        Роль
+        Остальные поля заполняются по
+        желанию и могут быть сгенерированы
+    3) Получает оповещение об успешном
+        добавлении пользователя и его
+        логин и пароль
+end note
+
+
+@enduml

@@ -1,0 +1,22 @@
+@startuml
+
+actor "Пользователь" as user
+
+boundary "Окно авторизации" as auth_screen
+
+entity "База данных" as db
+
+boundary "Личный кабиент роли" as cabinet_screen #green
+boundary "Окно ошибки" as error_screen #red
+
+user -> auth_screen : Вводит логин и пароль
+user -> auth_screen : Нажимает кнопку\n"Войти"
+auth_screen -> db : Поиск пользователя
+auth_screen -> auth_screen : Проверка правильности\nлогин&пароль
+alt нашелся пользователь
+  auth_screen -> cabinet_screen : создать окно
+else Некорректные данные
+    auth_screen -> error_screen : отобразить сообщение
+end
+
+@enduml

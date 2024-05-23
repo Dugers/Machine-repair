@@ -1,0 +1,114 @@
+@startuml
+
+hide empty members
+
+enum UserRole {
+  Admin
+  Client
+  Worker
+}
+class DB {
+  + GetAviableOrders()
+  + GetActiveOrders(Users)
+  + GetOrderById(id)
+  + GetOrderByMachine(Machines)
+  + GetMachineByOrder(Orders)
+  + CompleteOrder(Orders, description)
+}
+class AuthWindow {
+  + AuthButtonClick()
+  + UserRole CheckAuth(login, password)
+}
+ 
+Entity Users
+Entity Repairs
+Entity Machines
+Entity Orders
+
+Interface PersonalAreaWindow {
+  + PersonalAreaWindow(Users)
+  + LogoutButtonClick()
+}
+
+class WorkerAreaWindow {
+  + WorkerAreaWindow(Users)
+  + AviableOrdersButtonClick()
+  + ActiveOrdersButtonClick()
+  + LogoutButtonClick()
+}
+
+class AviableOrdersListWindow {
+  + AviableOrdersListWindow(Users)
+  + TakeOrderButtonClick()
+  + AboutOrderButtonClick()
+  + GoToAreaButtonClick()
+}
+
+class ActiveOrdersListWindow {
+  + ActiveOrdersListWindow(Users)
+  + CompleteOrderButtonClick()
+  + AboutOrderButtonClick()
+  + GoToAreaButtonClick()
+}
+
+class FinishOrderWindow {
+  + FinishOrderWindow(Orders, description)
+  + CompleteOrderButtonClick()
+  + GoToAreaButtonClick()
+}
+
+class ConfirmFinishOrderWindow {
+  + ConfirmFinishOrderWindow(Orders, description)
+  + YesButtonClick()
+  + NoButtonClick()
+}
+
+class AboutOrderWindow {
+  + AboutOrderWindow(Orders)
+  + AboutMachineButtonClick()
+  + GoToAreaButtonClick()
+}
+
+class AboutMachineWindow {
+  + AboutMachineWindow(Machines)
+  + HistoryRepairsButtonClick()
+  + GoToAreaButtonClick()
+}
+
+class ListRepairsMachineWindow {
+  + ListRepairsMachineWindow(Machines)
+  + AboutOrderButtonClick()
+  + GoToAreaButtonClick()
+}
+
+
+AuthWindow --> DB
+DB --> Users
+DB --> Repairs
+DB --> Machines
+DB --> Orders
+AuthWindow --> UserRole
+AuthWindow <--> PersonalAreaWindow
+WorkerAreaWindow --|> PersonalAreaWindow
+WorkerAreaWindow <--> AviableOrdersListWindow
+WorkerAreaWindow <--> ActiveOrdersListWindow
+AboutMachineWindow --> WorkerAreaWindow
+AviableOrdersListWindow --> AboutOrderWindow
+ActiveOrdersListWindow --> AboutOrderWindow
+AboutOrderWindow --> WorkerAreaWindow
+AboutOrderWindow --> AboutMachineWindow
+AboutMachineWindow --> ListRepairsMachineWindow
+ListRepairsMachineWindow --> WorkerAreaWindow
+ListRepairsMachineWindow --> AboutOrderWindow
+ListRepairsMachineWindow --> FinishOrderWindow
+FinishOrderWindow --> WorkerAreaWindow
+FinishOrderWindow --> ConfirmFinishOrderWindow
+ConfirmFinishOrderWindow --> WorkerAreaWindow
+AviableOrdersListWindow --> DB
+ActiveOrdersListWindow --> DB
+ConfirmFinishOrderWindow --> DB
+AboutMachineWindow --> DB
+AboutOrderWindow --> DB
+ListRepairsMachineWindow --> DB
+
+@enduml
