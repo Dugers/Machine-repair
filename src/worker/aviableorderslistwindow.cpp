@@ -10,8 +10,8 @@
 
 AviableOrdersListWindow::AviableOrdersListWindow(const int& user_id, QWidget *parent) :
     QWidget(parent),
+    PermissionController<UserRole::Worker>{user_id},
     ui(new Ui::AviableOrdersListWindow),
-    mUser_id{user_id},
     mAviable_orders{db::get_aviable_orders()}
 {
     ui->setupUi(this);
@@ -29,14 +29,15 @@ AviableOrdersListWindow::~AviableOrdersListWindow()
 void AviableOrdersListWindow::on_take_order_button_clicked()
 {
     ERROR_CHECK_BEGIN
+    confirm();
     if (ui->orders_table_widget->currentRow() == -1)
         throw std::runtime_error{"Выберите заказ"};
-    if (db::get_worker_orders_count(mUser_id) >= 1)
+    if (db::get_worker_orders_count(user_id()) >= 1)
         throw std::runtime_error{"Нельзя выполнять одновременно больше одного заказа"};
-    if (!db::update_order_executor(mAviable_orders[ui->orders_table_widget->currentRow()].id(), mUser_id))
+    if (!db::update_order_executor(mAviable_orders[ui->orders_table_widget->currentRow()].id(), user_id()))
         throw std::runtime_error{"Не удалось взять заказ"};
     show_info("Заказ успешно взят", false, this);
-    open_window(new AviableOrdersListWindow{mUser_id}, this);
+    open_window(new AviableOrdersListWindow{user_id()}, this);
     ERROR_CHECK_END(this)
 }
 
@@ -46,7 +47,7 @@ void AviableOrdersListWindow::on_about_button_clicked()
     ERROR_CHECK_BEGIN
     if (ui->orders_table_widget->currentRow() == -1)
         throw std::runtime_error{"Выберите заказ"};
-    open_window(new AboutOrderWindow{mUser_id, mAviable_orders[ui->orders_table_widget->currentRow()].id()}, this);
+    open_window(new AboutOrderWindow{user_id(), mAviable_orders[ui->orders_table_widget->currentRow()].id()}, this);
     this->close();
     ERROR_CHECK_END(this)
 }
@@ -55,7 +56,7 @@ void AviableOrdersListWindow::on_about_button_clicked()
 void AviableOrdersListWindow::on_go_area_button_clicked()
 {
     ERROR_CHECK_BEGIN
-    open_window(new WorkerAreaWindow{mUser_id}, this);
+    open_window(new WorkerAreaWindow{user_id()}, this);
     ERROR_CHECK_END(this)
 }
 

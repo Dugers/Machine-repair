@@ -2,12 +2,15 @@
 #define CLIENTAREAWINDOW_H
 
 #include <QWidget>
+#include "permissioncontroller.h"
 
 namespace Ui {
 class ClientAreaWindow;
 }
 
-class ClientAreaWindow : public QWidget
+class ClientAreaWindow :
+    public QWidget,
+    public PermissionController<UserRole::Client>
 {
     Q_OBJECT
 
@@ -24,7 +27,6 @@ private slots:
 
 private:
     Ui::ClientAreaWindow *ui;
-    const int mUser_id;
 };
 
 #endif // CLIENTAREAWINDOW_H

@@ -8,8 +8,8 @@
 
 AboutMachineWindow::AboutMachineWindow(const int& user_id, const int& machine_id, QWidget *parent) :
     QWidget(parent),
+    PermissionController<UserRole::Worker>{user_id},
     ui(new Ui::AboutMachineWindow),
-    mUser_id{user_id},
     mMachine_id{machine_id}
 {
     ui->setupUi(this);
@@ -30,7 +30,7 @@ AboutMachineWindow::~AboutMachineWindow()
 void AboutMachineWindow::on_order_button_clicked()
 {
     ERROR_CHECK_BEGIN
-    open_window(new ListRepairsMachineWindow{mUser_id, mMachine_id}, this);
+    open_window(new ListRepairsMachineWindow{user_id(), mMachine_id}, this);
     ERROR_CHECK_END(this)
 }
 
@@ -38,7 +38,7 @@ void AboutMachineWindow::on_order_button_clicked()
 void AboutMachineWindow::on_go_area_button_clicked()
 {
     ERROR_CHECK_BEGIN
-    open_window(new WorkerAreaWindow{mUser_id}, this);
+    open_window(new WorkerAreaWindow{user_id()}, this);
     ERROR_CHECK_END(this)
 }
 

@@ -2,12 +2,15 @@
 #define CLIENTREPAIRSWINDOW_H
 
 #include <QWidget>
+#include "permissioncontroller.h"
 
 namespace Ui {
 class ClientRepairsWindow;
 }
 
-class ClientRepairsWindow : public QWidget
+class ClientRepairsWindow :
+    public QWidget,
+    public PermissionController<UserRole::Client>
 {
     Q_OBJECT
 
@@ -26,7 +29,6 @@ private slots:
 
 private:
     Ui::ClientRepairsWindow *ui;
-    const int mUser_id;
 };
 
 #endif // CLIENTREPAIRSWINDOW_H

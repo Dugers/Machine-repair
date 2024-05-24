@@ -7,8 +7,8 @@
 
 ClientAreaWindow::ClientAreaWindow(const int& user_id, QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::ClientAreaWindow),
-    mUser_id{user_id}
+    PermissionController<UserRole::Client>{user_id},
+    ui(new Ui::ClientAreaWindow)
 {
     ui->setupUi(this);
 }
@@ -21,7 +21,7 @@ ClientAreaWindow::~ClientAreaWindow()
 void ClientAreaWindow::on_list_services_button_clicked()
 {
     ERROR_CHECK_BEGIN
-    open_window(new ClientRepairsWindow(mUser_id), this);
+    open_window(new ClientRepairsWindow(user_id()), this);
     ERROR_CHECK_END(this)
 }
 
@@ -29,7 +29,7 @@ void ClientAreaWindow::on_list_services_button_clicked()
 void ClientAreaWindow::on_my_machines_button_clicked()
 {
     ERROR_CHECK_BEGIN
-    open_window(new ClientMachinesWindow(mUser_id), this);
+    open_window(new ClientMachinesWindow(user_id()), this);
     ERROR_CHECK_END(this)
 }
 

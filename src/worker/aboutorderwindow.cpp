@@ -8,8 +8,8 @@
 
 AboutOrderWindow::AboutOrderWindow(const int& user_id, const int& order_id, QWidget *parent) :
     QWidget(parent),
+    PermissionController<UserRole::Worker>{user_id},
     ui(new Ui::AboutOrderWindow),
-    mUser_id{user_id},
     mOrder{std::move(*db::get_order(order_id))}
 {
     ui->setupUi(this);
@@ -46,7 +46,7 @@ void AboutOrderWindow::hide_description() {
 void AboutOrderWindow::on_about_machine_button_clicked()
 {
     ERROR_CHECK_BEGIN
-    open_window(new AboutMachineWindow{mUser_id, db::get_machine_by_order(mOrder.id())->id()}, this);
+    open_window(new AboutMachineWindow{user_id(), db::get_machine_by_order(mOrder.id())->id()}, this);
     ERROR_CHECK_END(this)
 }
 
@@ -54,7 +54,7 @@ void AboutOrderWindow::on_about_machine_button_clicked()
 void AboutOrderWindow::on_go_area_button_clicked()
 {
     ERROR_CHECK_BEGIN
-    open_window(new WorkerAreaWindow{mUser_id}, this);
+    open_window(new WorkerAreaWindow{user_id()}, this);
     ERROR_CHECK_END(this)
 }
 

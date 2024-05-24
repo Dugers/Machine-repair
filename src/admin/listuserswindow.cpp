@@ -12,8 +12,8 @@
 
 ListUsersWindow::ListUsersWindow(const int& user_id, QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::ListUsersWindow),
-    mUser_id{user_id}
+    PermissionController<UserRole::Admin>{user_id},
+    ui(new Ui::ListUsersWindow)
 {
     ui->setupUi(this);
     QVector<QVector<QString>> users_str;
@@ -48,7 +48,7 @@ int ListUsersWindow::get_selected_user_id() const {
 void ListUsersWindow::on_go_area_button_clicked()
 {
     ERROR_CHECK_BEGIN
-    open_window(new AdminAreaWindow{mUser_id}, this);
+    open_window(new AdminAreaWindow{user_id()}, this);
     ERROR_CHECK_END(this)
 }
 
@@ -56,12 +56,12 @@ void ListUsersWindow::on_go_area_button_clicked()
 void ListUsersWindow::on_delete_button_clicked()
 {
     ERROR_CHECK_BEGIN
-    const int user_id = get_selected_user_id();
+    const int selected_user_id = get_selected_user_id();
     if (!show_confirm(this)) return;
-    if (!db::delete_user(user_id))
+    if (!db::delete_user(selected_user_id))
         throw std::runtime_error{"Не удалось удалить пользователя"};
-    if (mUser_id != user_id)
-        open_window(new AdminAreaWindow{mUser_id}, this);
+    if (user_id() != selected_user_id)
+        open_window(new AdminAreaWindow{user_id()}, this);
     else
         open_window(new AuthWindow, this);
     ERROR_CHECK_END(this)
@@ -71,8 +71,8 @@ void ListUsersWindow::on_delete_button_clicked()
 void ListUsersWindow::on_edit_button_clicked()
 {
     ERROR_CHECK_BEGIN
-    const int user_id = get_selected_user_id();
-    open_window(new EditUserWindow{mUser_id, user_id}, this);
+    const int selected_user_id = get_selected_user_id();
+    open_window(new EditUserWindow{user_id(), selected_user_id}, this);
     ERROR_CHECK_END(this)
 }
 

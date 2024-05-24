@@ -10,8 +10,8 @@
 
 AddUserWindow::AddUserWindow(const int& user_id, QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::AddUserWindow),
-    mUser_id{user_id}
+    PermissionController<UserRole::Admin>{user_id},
+    ui(new Ui::AddUserWindow)
 {
     ui->setupUi(this);
     const QVector<QPair<QString, UserRole>>& roles = get_user_roles();
@@ -27,7 +27,7 @@ AddUserWindow::~AddUserWindow()
 void AddUserWindow::on_go_area_button_clicked()
 {
     ERROR_CHECK_BEGIN
-    open_window(new AdminAreaWindow{mUser_id}, this);
+    open_window(new AdminAreaWindow{user_id()}, this);
     ERROR_CHECK_END(this)
 }
 
@@ -35,6 +35,7 @@ void AddUserWindow::on_go_area_button_clicked()
 void AddUserWindow::on_add_button_clicked()
 {
     ERROR_CHECK_BEGIN
+    confirm();
     validate();
     const User user = prepare_data();
     if (!db::create_user(user))

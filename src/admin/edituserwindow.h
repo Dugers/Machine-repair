@@ -3,12 +3,15 @@
 
 #include <QWidget>
 #include "../entities/user.h"
+#include "permissioncontroller.h"
 
 namespace Ui {
 class EditUserWindow;
 }
 
-class EditUserWindow : public QWidget
+class EditUserWindow :
+    public QWidget,
+    PermissionController<UserRole::Admin>
 {
     Q_OBJECT
 
@@ -27,7 +30,6 @@ private slots:
 
 private:
     Ui::EditUserWindow *ui;
-    const int mUser_id;
     const QSharedPointer<UserSql> mEdited_user;
 };
 

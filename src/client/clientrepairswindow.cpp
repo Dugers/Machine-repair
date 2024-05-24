@@ -8,11 +8,11 @@
 
 ClientRepairsWindow::ClientRepairsWindow(const int& user_id, QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::ClientRepairsWindow),
-    mUser_id{user_id}
+    PermissionController<UserRole::Client>{user_id},
+    ui(new Ui::ClientRepairsWindow)
 {
     ui->setupUi(this);
-    auto machines = db::get_machines(mUser_id);
+    auto machines = db::get_machines(this->user_id());
     for (auto const& machine: machines)
         this->ui->machine_combo_box->addItem(machine.name(), machine.id());
 }
@@ -24,7 +24,7 @@ ClientRepairsWindow::~ClientRepairsWindow()
 void ClientRepairsWindow::on_go_area_button_clicked()
 {
     ERROR_CHECK_BEGIN
-    open_window(new ClientAreaWindow{mUser_id}, this);
+    open_window(new ClientAreaWindow{user_id()}, this);
     ERROR_CHECK_END(this)
 }
 
@@ -32,9 +32,10 @@ void ClientRepairsWindow::on_go_area_button_clicked()
 void ClientRepairsWindow::on_order_button_clicked()
 {
     ERROR_CHECK_BEGIN
+    confirm();
     int machine_id = this->ui->machine_combo_box->currentData().toInt();
     int repair_id = this->ui->repair_combo_box->currentData().toInt();
-    if (!db::create_order(mUser_id, machine_id, repair_id))
+    if (!db::create_order(user_id(), machine_id, repair_id))
         throw std::runtime_error{"Не удалось выполнить операцию, возможные причины:\n1) Проблемы с базой данных \n2) Для данного станка уже выполняется выбранная услуга"};
     show_info("Заявка успешно принята в обработку", false, this);
     ERROR_CHECK_END(this)

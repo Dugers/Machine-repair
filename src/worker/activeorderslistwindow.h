@@ -4,12 +4,15 @@
 #include <QWidget>
 #include <QTableWidgetItem>
 #include "../entities/order.h"
+#include "permissioncontroller.h"
 
 namespace Ui {
 class ActiveOrdersListWindow;
 }
 
-class ActiveOrdersListWindow : public QWidget
+class ActiveOrdersListWindow :
+    public QWidget,
+    public PermissionController<UserRole::Worker>
 {
     Q_OBJECT
 
@@ -28,7 +31,6 @@ private slots:
 
 private:
     Ui::ActiveOrdersListWindow *ui;
-    const int mUser_id;
     QVector<OrderSql> mActive_orders;
 };
 

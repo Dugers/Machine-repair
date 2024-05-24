@@ -4,12 +4,15 @@
 #include <QWidget>
 #include <QTableWidgetItem>
 #include "entities/user.h"
+#include "permissioncontroller.h"
 
 namespace Ui {
 class ListUsersWindow;
 }
 
-class ListUsersWindow : public QWidget
+class ListUsersWindow :
+    public QWidget,
+    public PermissionController<UserRole::Admin>
 {
     Q_OBJECT
 
@@ -29,7 +32,6 @@ private slots:
 
 private:
     Ui::ListUsersWindow *ui;
-    const int mUser_id;
     const int USER_LOGIN_COLUMN = 1;
 };
 

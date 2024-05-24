@@ -9,13 +9,13 @@
 
 ClientMachinesWindow::ClientMachinesWindow(const int& user_id, QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::ClientMachinesWindow),
-    mUser_id{user_id}
+    PermissionController<UserRole::Client>{user_id},
+    ui(new Ui::ClientMachinesWindow)
 {
     ui->setupUi(this);
-    QVector<MachineSql> machines = db::get_machines(mUser_id);
-        for (const MachineSql& machine : machines)
-    this->ui->machines_list->addItem(machine.name());
+    QVector<MachineSql> machines = db::get_machines(this->user_id());
+    for (const MachineSql& machine : machines)
+        this->ui->machines_list->addItem(machine.name());
 }
 
 ClientMachinesWindow::~ClientMachinesWindow()
@@ -27,7 +27,7 @@ ClientMachinesWindow::~ClientMachinesWindow()
 void ClientMachinesWindow::on_add_button_clicked()
 {
     ERROR_CHECK_BEGIN
-    open_window(new AddMachineWindow{mUser_id}, this);
+    open_window(new AddMachineWindow{user_id()}, this);
     ERROR_CHECK_END(this)
 }
 
@@ -35,7 +35,7 @@ void ClientMachinesWindow::on_add_button_clicked()
 void ClientMachinesWindow::on_go_area_button_clicked()
 {
     ERROR_CHECK_BEGIN
-    open_window(new ClientAreaWindow{mUser_id}, this);
+    open_window(new ClientAreaWindow{user_id()}, this);
     ERROR_CHECK_END(this)
 }
 

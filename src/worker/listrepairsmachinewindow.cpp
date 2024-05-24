@@ -10,8 +10,8 @@
 
 ListRepairsMachineWindow::ListRepairsMachineWindow(const int& user_id, const int& mMachine_id, QWidget *parent) :
     QWidget(parent),
+    PermissionController<UserRole::Worker>{user_id},
     ui(new Ui::ListRepairsMachineWindow),
-    mUser_id{user_id},
     mOrders{db::get_machine_orders(mMachine_id)}
 {
     ui->setupUi(this);
@@ -32,7 +32,7 @@ void ListRepairsMachineWindow::on_about_button_clicked()
     ERROR_CHECK_BEGIN
     if (ui->orders_table_widget->currentRow() == -1)
         throw std::runtime_error{"Выберите заказ"};
-    open_window(new AboutOrderWindow{mUser_id, mOrders[ui->orders_table_widget->currentRow()].id()}, this);
+    open_window(new AboutOrderWindow{user_id(), mOrders[ui->orders_table_widget->currentRow()].id()}, this);
     ERROR_CHECK_END(this)
 }
 
@@ -48,7 +48,7 @@ void ListRepairsMachineWindow::on_orders_table_widget_itemDoubleClicked(QTableWi
 void ListRepairsMachineWindow::on_go_area_button_clicked()
 {
     ERROR_CHECK_BEGIN
-    open_window(new WorkerAreaWindow{mUser_id}, this);
+    open_window(new WorkerAreaWindow{user_id()}, this);
     ERROR_CHECK_END(this)
 }
 

@@ -2,12 +2,15 @@
 #define CLIENTMACHINESWINDOW_H
 
 #include <QWidget>
+#include "permissioncontroller.h"
 
 namespace Ui {
 class ClientMachinesWindow;
 }
 
-class ClientMachinesWindow : public QWidget
+class ClientMachinesWindow :
+    public QWidget,
+    public PermissionController<UserRole::Client>
 {
     Q_OBJECT
 
@@ -23,7 +26,6 @@ private slots:
 
 private:
     Ui::ClientMachinesWindow *ui;
-    const int mUser_id;
 };
 
 #endif // CLIENTMACHINESWINDOW_H

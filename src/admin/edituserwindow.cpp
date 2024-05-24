@@ -9,8 +9,8 @@
 
 EditUserWindow::EditUserWindow(const int& user_id, const int& edited_user_id, QWidget *parent) :
     QWidget(parent),
+    PermissionController<UserRole::Admin>{user_id},
     ui(new Ui::EditUserWindow),
-    mUser_id{user_id},
     mEdited_user{db::get_user(edited_user_id)}
 {
     if (!mEdited_user)
@@ -38,7 +38,7 @@ EditUserWindow::~EditUserWindow()
 void EditUserWindow::on_go_area_button_clicked()
 {
     ERROR_CHECK_BEGIN
-    open_window(new AdminAreaWindow{mUser_id}, this);
+    open_window(new AdminAreaWindow{user_id()}, this);
     ERROR_CHECK_END(this)
 }
 
@@ -46,14 +46,23 @@ void EditUserWindow::on_go_area_button_clicked()
 void EditUserWindow::on_add_button_clicked()
 {
     ERROR_CHECK_BEGIN
+    confirm();
     validate();
     const QString name = ui->user_name_line_edit->text().simplified();
     const QString login = ui->user_login_line_edit->text().simplified();
     const QString password = ui->user_password_line_edit->text().simplified();
     const UserRole role = role_by_str(ui->user_role_combo_box->currentText());
     validate(name, login, password, role);
-    update(name, login, password, role);
-    show_info("Данные пользователя успешно обновленны", false, this);
+    if (check_changes(name, login, password, role)) {
+        update(name, login, password, role);
+        show_info("Данные пользователя успешно обновленны", false, this);
+        if (user_id() == mEdited_user->id())
+            open_window(new AuthWindow{}, this);
+        else
+            open_window(new EditUserWindow{user_id(), mEdited_user->id()}, this);
+    }
+    else
+        show_info("Изменений не было", false, this);
     ERROR_CHECK_END(this)
 }
 
@@ -78,10 +87,7 @@ void EditUserWindow::validate(const QString& name, const QString& login, const Q
 bool EditUserWindow::check_changes(const QString& name, const QString& login, const QString& password, const UserRole& role){
     if (name == mEdited_user->name() && login == mEdited_user->login() &&
             (role == mEdited_user->role()) && password.isEmpty())
-    {
-        show_info("Изменений не было", false, this);
         return false;
-    }
     return true;
 }
 

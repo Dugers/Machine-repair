@@ -2,12 +2,15 @@
 #define ADDMACHINEWINDOW_H
 
 #include <QWidget>
+#include "permissioncontroller.h"
 
 namespace Ui {
 class AddMachineWindow;
 }
 
-class AddMachineWindow : public QWidget
+class AddMachineWindow :
+    public QWidget,
+    public PermissionController<UserRole::Client>
 {
     Q_OBJECT
 
@@ -27,7 +30,6 @@ private slots:
 
 private:
     Ui::AddMachineWindow *ui;
-    const int mUser_id;
 };
 
 #endif // ADDMACHINEWINDOW_H

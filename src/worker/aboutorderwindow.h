@@ -3,12 +3,15 @@
 
 #include <QWidget>
 #include "../entities/order.h"
+#include "permissioncontroller.h"
 
 namespace Ui {
 class AboutOrderWindow;
 }
 
-class AboutOrderWindow : public QWidget
+class AboutOrderWindow :
+    public QWidget,
+    public PermissionController<UserRole::Worker>
 {
     Q_OBJECT
 
@@ -24,7 +27,6 @@ private slots:
 
 private:
     Ui::AboutOrderWindow *ui;
-    const int mUser_id;
     const OrderSql mOrder;
 };
 

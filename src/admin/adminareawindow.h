@@ -2,12 +2,15 @@
 #define ADMINAREAWINDOW_H
 
 #include <QWidget>
+#include "permissioncontroller.h"
 
 namespace Ui {
 class AdminAreaWindow;
 }
 
-class AdminAreaWindow : public QWidget
+class AdminAreaWindow :
+    public QWidget,
+    public PermissionController<UserRole::Admin>
 {
     Q_OBJECT
 
@@ -24,7 +27,6 @@ private slots:
 
 private:
     Ui::AdminAreaWindow *ui;
-    const int mUser_id;
 };
 
 #endif // ADMINAREAWINDOW_H

@@ -2,12 +2,15 @@
 #define WORKERAREAWINDOW_H
 
 #include <QWidget>
+#include "permissioncontroller.h"
 
 namespace Ui {
 class WorkerAreaWindow;
 }
 
-class WorkerAreaWindow : public QWidget
+class WorkerAreaWindow :
+    public QWidget,
+    public PermissionController<UserRole::Worker>
 {
     Q_OBJECT
 
@@ -24,7 +27,6 @@ private slots:
 
 private:
     Ui::WorkerAreaWindow *ui;
-    const int mUser_id;
 };
 
 #endif // WORKERAREAWINDOW_H

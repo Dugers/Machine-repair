@@ -3,12 +3,15 @@
 
 #include <QWidget>
 #include "../entities/user.h"
+#include "permissioncontroller.h"
 
 namespace Ui {
 class AddUserWindow;
 }
 
-class AddUserWindow : public QWidget
+class AddUserWindow :
+    public QWidget,
+    public PermissionController<UserRole::Admin>
 {
     Q_OBJECT
 
@@ -27,7 +30,6 @@ private slots:
 
 private:
     Ui::AddUserWindow *ui;
-    const int mUser_id;
 };
 
 #endif // ADDUSERWINDOW_H
