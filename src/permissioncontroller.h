@@ -16,7 +16,7 @@ class PermissionController
 {
 public:
     PermissionController(const int& user_id);
-    void confirm();
+    virtual void confirm();
     void set_user_id(const int& user_id);
     const int& user_id() const noexcept;
 private:
@@ -24,7 +24,7 @@ private:
 };
 
 template <UserRole role>
-PermissionController<role>::PermissionController(const int& user_id) : mUser_id{user_id} {}
+PermissionController<role>::PermissionController(const int& user_id) : mUser_id{user_id} {confirm();}
 
 template <UserRole role>
 void PermissionController<role>::confirm() {
