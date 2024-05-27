@@ -42,6 +42,10 @@ public:
     User& operator=(User&) = default;
     User& operator=(User&&) noexcept = default;
     QVector<QString> str_values(bool name = true, bool login = true, bool password = false, bool role = true) const;
+    void validate_name();
+    void validate_login();
+    void validate_password();
+    void validate_role();
     static QString hash_password(const QString& password);
     static void validate_name(const QString& name);
     static void validate_login(const QString& login);

@@ -57,9 +57,10 @@ QString User::hash_password(const QString& password) {
 }
 
 UserRole role_by_str(const QString& role) {
-    if (role == "Admin") return UserRole::Admin;
-    if (role == "Client") return UserRole::Client;
-    if (role == "Worker") return UserRole::Worker;
+    QString lower_role = role.toLower();
+    if (lower_role == "admin") return UserRole::Admin;
+    if (lower_role == "client") return UserRole::Client;
+    if (lower_role == "worker") return UserRole::Worker;
     return UserRole::None;
 }
 
@@ -141,6 +142,19 @@ QVector<QString> User::str_values(bool name, bool login, bool password, bool rol
     if (role)
         values.push_back(str_by_role(this->role()));
     return values;
+}
+
+void User::validate_name() {
+    return validate_name(this->mName);
+}
+void User::validate_login() {
+    return validate_login(this->mLogin);
+}
+void User::validate_password() {
+    return validate_password(this->mPassword);
+}
+void User::validate_role() {
+    return validate_role(this->mRole);
 }
 
 // ============================== SQL TYPES ==============================
