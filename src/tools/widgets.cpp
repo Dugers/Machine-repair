@@ -3,11 +3,12 @@
 
 
 void fill_table(QTableWidget* table, const QVector<QVector<QString>>& table_values) {
-    if (table_values.empty()) return;
     const qsizetype columns_count = table->columnCount();
 
     for (int column = 0; column < columns_count; ++column)
         table->setColumnWidth(column, table->width()/columns_count);
+
+    if (table_values.empty()) return;
 
     const qsizetype rows = table_values.size();
     table->setRowCount(rows);
