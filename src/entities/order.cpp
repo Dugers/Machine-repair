@@ -70,7 +70,7 @@ QVector<QString> Order::str_values(bool machine_type, bool machine_brand, bool s
     QVector<QString> values;
     if (((machine_type || machine_brand) && (!mMachine || !mMachine->mark())) ||
         (service_name && !mService) ||
-        (date_start && !mDate_start.isValid()))
+        (date_start && (mDate_start.isNull() || !mDate_start.isValid())))
             throw std::invalid_argument{"Не получилось отобразить данные заказа"};
 
     if (machine_type)
@@ -104,7 +104,7 @@ QString Order::str_status() const {
 
 QString Order::str_date_end() const {
     if (mComplete) {
-        if (!mDate_end.isValid())
+        if (mDate_end.isNull() || !mDate_end.isValid())
             throw std::invalid_argument{"Не получилось отобразить данные заказа"};
         return mDate_end.toString("dd.MM.yyyy");
     }
