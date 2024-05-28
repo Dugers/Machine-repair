@@ -1,5 +1,4 @@
 TEMPLATE = subdirs
 
 SUBDIRS += \
-    src/machines.pro \
-    tests
+    entities_validators
