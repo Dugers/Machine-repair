@@ -99,7 +99,7 @@ void User::validate_name(const QString& name) {
 void User::validate_login(const QString& login) {
     if (login.size() < 6)
         throw std::runtime_error{"the login is too short (need >= 6 chars)"};
-    static const QString allowed_characters = "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM_";
+    static const QString allowed_characters = "0123456789qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM_";
     for (auto const& ch : login) {
         if (!allowed_characters.contains(ch))
             throw std::runtime_error{"You can only use Latin letters and underscore"};
@@ -112,8 +112,7 @@ void User::validate_password(const QString& password) {
 }
 
 void User::validate_role(const QString& role) {
-    if (role_by_str(role) == UserRole::None)
-        throw std::runtime_error{"Unknown role"};
+    return User::validate_role(role_by_str(role));
 }
 
 void User::validate_role(const UserRole& role) {
