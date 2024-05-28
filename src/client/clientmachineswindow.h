@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include "permissioncontroller.h"
+#include <QTableWidgetItem>
 
 namespace Ui {
 class ClientMachinesWindow;

@@ -1,5 +1,6 @@
 #include "clientmachineswindow.h"
 #include "tools/messages.h"
+#include "tools/widgets.h"
 #include "ui_clientmachineswindow.h"
 #include "clientareawindow.h"
 #include "addmachinewindow.h"
@@ -13,9 +14,10 @@ ClientMachinesWindow::ClientMachinesWindow(const int& user_id, QWidget *parent) 
     ui(new Ui::ClientMachinesWindow)
 {
     ui->setupUi(this);
-    QVector<MachineSql> machines = db::get_machines(this->user_id());
-    for (const MachineSql& machine : machines)
-        this->ui->machines_list->addItem(machine.name());
+    QVector<QVector<QString>> machines_str;
+    for (const MachineSql& machine : db::get_machines(this->user_id()))
+        machines_str.push_back(machine.str_values());
+    fill_table(ui->machines_table_widget, machines_str);
 }
 
 ClientMachinesWindow::~ClientMachinesWindow()
@@ -38,4 +40,3 @@ void ClientMachinesWindow::on_go_area_button_clicked()
     open_window(new ClientAreaWindow{user_id()}, this);
     ERROR_CHECK_END(this)
 }
-
