@@ -66,6 +66,18 @@ void Machine::set_mark(const QSharedPointer<const MachineMark>& mark) {
 void Machine::set_mark(QSharedPointer<const MachineMark>&& mark) {
     mMark = std::move(mark);
 }
+QVector<QString> Machine::str_values(bool name, bool machine_type, bool machine_brand) const {
+    QVector<QString> values;
+    if ((machine_type || machine_brand) && mMark == nullptr)
+        throw std::invalid_argument{"Не получилось отобразить данные о станке"};
+    if (name)
+        values.push_back(mName);
+    if (machine_type)
+        values.push_back(mMark->type().name());
+    if (machine_brand)
+        values.push_back(mMark->brand().name());
+    return values;
+}
 const QSharedPointer<const MachineMark>& Machine::mark() const {
     return mMark;
 }

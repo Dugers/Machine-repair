@@ -17,6 +17,7 @@ private slots:
     void user_role();
     void user_str();
     void order_str();
+    void machine_str();
 };
 
 

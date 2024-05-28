@@ -93,6 +93,7 @@ public:
     void set_owner(QSharedPointer<const User>&& owner);
     void set_mark(const QSharedPointer<const MachineMark>& mark);
     void set_mark(QSharedPointer<const MachineMark>&& mark);
+    QVector<QString> str_values(bool name = true, bool machine_type = true, bool machine_brand = true) const;
     const QSharedPointer<const MachineMark>& mark() const;
     const QSharedPointer<const User>& owner() const;
     const QString& name() const;

@@ -1,6 +1,7 @@
 #include "tst_entities_str.h"
 #include "entities/user.h"
 #include "entities/order.h"
+#include "entities/machine.h"
 
 entities_str::entities_str()
 {
@@ -166,6 +167,27 @@ void entities_str::order_str()
     // ===============================================
     order.set_date_end({});
     QVERIFY_EXCEPTION_THROWN(order.str_date_end(), std::invalid_argument);
+}
+
+void entities_str::machine_str()
+{
+    Machine machine{"machine", nullptr, nullptr};
+    QVector<QString> values = {"machine"};
+    QVERIFY(machine.str_values(true, false, false) == values);
+    QVERIFY_EXCEPTION_THROWN(machine.str_values(false, false, true), std::invalid_argument);
+    QVERIFY_EXCEPTION_THROWN(machine.str_values(false, true, false), std::invalid_argument);
+    QVERIFY_EXCEPTION_THROWN(machine.str_values(true), std::invalid_argument);
+    machine.set_mark(QSharedPointer<MachineMark>::create(
+                        MachineMark::MachineType("Type"),
+                        MachineMark::MachineBrand("Brand")));
+    values = {"machine", "Type", "Brand"};
+    QVERIFY(machine.str_values() == values);
+    values = {"machine", "Brand"};
+    QVERIFY(machine.str_values(true, false, true) == values);
+    values = {"machine", "Type"};
+    QVERIFY(machine.str_values(true, true, false) == values);
+    values = {"Type", "Brand"};
+    QVERIFY(machine.str_values(false, true, true) == values);
 }
 
 QTEST_APPLESS_MAIN(entities_str)
