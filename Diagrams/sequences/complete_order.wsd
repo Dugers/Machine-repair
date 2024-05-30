@@ -1,4 +1,4 @@
-@startuml
+@startuml complete_order_sequence
 
 actor Рабочий as worker
 

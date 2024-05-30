@@ -1,4 +1,4 @@
-@startuml
+@startuml do_order_sequence
 
 actor Клиент as client
 

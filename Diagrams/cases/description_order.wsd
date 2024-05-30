@@ -1,4 +1,4 @@
-@startuml
+@startuml description_order_case
 
 actor Работник as worker
 

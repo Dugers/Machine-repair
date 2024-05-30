@@ -1,9 +1,12 @@
-@startuml
+@startuml case
+
 left to right direction
+
 package Сотрудники {
   actor "Рабочий" as worker
   actor "Администратор" as admin
 }
+
 "Клиент" as client
 client --> (Посмотреть список ремонтных работ и их характеристики)
 client --> (Заказать ремонтные работы)
@@ -22,4 +25,5 @@ admin --> (Удалить пользователя)
 admin --> (Редактировать пользователя)
 admin --> (Посмотреть список пользователей)
 admin --> (Авторизоваться)
+
 @enduml

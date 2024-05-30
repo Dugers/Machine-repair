@@ -1,4 +1,5 @@
-@startuml
+@startuml description_order_sequence
+
 actor Работник as worker
 
 boundary "Окно" as window_screen

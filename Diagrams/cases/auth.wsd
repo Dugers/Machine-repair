@@ -1,4 +1,4 @@
-@startuml
+@startuml auth_case
 
 actor Пользователь as user
 

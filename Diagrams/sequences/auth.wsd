@@ -1,4 +1,4 @@
-@startuml
+@startuml auth_sequence
 
 actor "Пользователь" as user
 

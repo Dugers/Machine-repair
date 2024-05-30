@@ -1,4 +1,4 @@
-@startuml
+@startuml worker_class
 
 hide empty members
 

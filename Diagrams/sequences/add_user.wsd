@@ -1,4 +1,4 @@
-@startuml
+@startuml add_user_sequence
 
 actor Администратор as admin
 

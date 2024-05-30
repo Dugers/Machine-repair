@@ -1,4 +1,4 @@
-@startuml
+@startuml add_user_case
 
 actor Администратор as admin
 
