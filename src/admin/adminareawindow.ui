@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>416</width>
+    <width>407</width>
     <height>337</height>
    </rect>
   </property>
@@ -16,6 +16,18 @@
     <verstretch>0</verstretch>
    </sizepolicy>
   </property>
+  <property name="minimumSize">
+   <size>
+    <width>407</width>
+    <height>337</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>407</width>
+    <height>337</height>
+   </size>
+  </property>
   <property name="palette">
    <palette>
     <active/>
@@ -24,7 +36,7 @@
    </palette>
   </property>
   <property name="windowTitle">
-   <string>Form</string>
+   <string>Личный кабинет администратора</string>
   </property>
   <widget class="QLabel" name="area_label">
    <property name="geometry">

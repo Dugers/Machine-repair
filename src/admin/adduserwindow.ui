@@ -2,6 +2,9 @@
 <ui version="4.0">
  <class>AddUserWindow</class>
  <widget class="QWidget" name="AddUserWindow">
+  <property name="windowModality">
+   <enum>Qt::NonModal</enum>
+  </property>
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -16,6 +19,18 @@
     <verstretch>0</verstretch>
    </sizepolicy>
   </property>
+  <property name="minimumSize">
+   <size>
+    <width>710</width>
+    <height>507</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>710</width>
+    <height>507</height>
+   </size>
+  </property>
   <property name="palette">
    <palette>
     <active/>
@@ -24,7 +39,7 @@
    </palette>
   </property>
   <property name="windowTitle">
-   <string>Form</string>
+   <string>Добавление пользователя</string>
   </property>
   <widget class="QPushButton" name="go_area_button">
    <property name="geometry">

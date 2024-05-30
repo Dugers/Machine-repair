@@ -10,6 +10,18 @@
     <height>337</height>
    </rect>
   </property>
+  <property name="minimumSize">
+   <size>
+    <width>416</width>
+    <height>337</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>416</width>
+    <height>337</height>
+   </size>
+  </property>
   <property name="palette">
    <palette>
     <active/>
@@ -18,7 +30,7 @@
    </palette>
   </property>
   <property name="windowTitle">
-   <string>Form</string>
+   <string>Личный кабинет пользователя</string>
   </property>
   <widget class="QLabel" name="area_label">
    <property name="geometry">

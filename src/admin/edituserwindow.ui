@@ -16,6 +16,18 @@
     <verstretch>0</verstretch>
    </sizepolicy>
   </property>
+  <property name="minimumSize">
+   <size>
+    <width>751</width>
+    <height>507</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>751</width>
+    <height>507</height>
+   </size>
+  </property>
   <property name="palette">
    <palette>
     <active/>
@@ -24,7 +36,7 @@
    </palette>
   </property>
   <property name="windowTitle">
-   <string>Form</string>
+   <string>Редактирование пользователя</string>
   </property>
   <widget class="QPushButton" name="go_area_button">
    <property name="geometry">

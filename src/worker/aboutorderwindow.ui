@@ -42,7 +42,7 @@
    </font>
   </property>
   <property name="windowTitle">
-   <string>Form</string>
+   <string>Подробности о заказе</string>
   </property>
   <widget class="QLabel" name="about_order_label">
    <property name="geometry">

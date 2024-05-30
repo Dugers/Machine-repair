@@ -16,8 +16,20 @@
     <verstretch>0</verstretch>
    </sizepolicy>
   </property>
+  <property name="minimumSize">
+   <size>
+    <width>763</width>
+    <height>417</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>763</width>
+    <height>417</height>
+   </size>
+  </property>
   <property name="windowTitle">
-   <string>Form</string>
+   <string>Завершение заказа</string>
   </property>
   <widget class="QPushButton" name="complete_order_button">
    <property name="geometry">
@@ -98,9 +110,9 @@
   <widget class="QLabel" name="about_order_label">
    <property name="geometry">
     <rect>
-     <x>250</x>
+     <x>260</x>
      <y>20</y>
-     <width>411</width>
+     <width>361</width>
      <height>31</height>
     </rect>
    </property>
@@ -111,7 +123,7 @@
     </font>
    </property>
    <property name="text">
-    <string>Подробности о заказе</string>
+    <string>Завершение заказа</string>
    </property>
   </widget>
  </widget>
