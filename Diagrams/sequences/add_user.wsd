@@ -1,35 +1,43 @@
 @startuml add_user_sequence
 
+skinparam defaultFontSize 35
+scale 0.5
+
 actor Администратор as admin
 
 boundary "Добавление пользователя" as add_user_screen
 
 control "Сгенерировать логин" as generate_login
 control "Сгенерировать пароль" as generate_password
+control "Проверить пароль" as check_password
+control "Проверить имя" as check_name
 
 entity "База данных" as db
 
 boundary "Уведомление о успешном\n добавлении" as added_info_screen #green
 boundary "Окно ошибки" as error_screen #red
 
-admin -> add_user_screen : Вводит ФИО и выбирает роль\nВвод логина и пароля\nпо желанию
+admin -> add_user_screen : Вводит имя и выбирает роль\nВвод логина и пароля\nпо желанию
 admin -> add_user_screen : Нажимает кнопку Добавить
+add_user_screen -> check_name : Проверить имя
+alt имя не соответствует требованиям
+  add_user_screen -> error_screen : показать сообщение\n
+end
 alt был введен логин
   add_user_screen -> db : Проверить наличие\nтакого пользователя
   alt такой пользователь существует
     add_user_screen -> error_screen : показать сообщение\n
     end
 else логин не был введен
-  add_user_screen -> generate_login : создать логин\nна основе ФИО
+  add_user_screen -> generate_login : создать логин\nна основе имени
   generate_login -> db : проверяет, не занят\nли такой логин
 end
-alt пароль не был введен
+alt был введен пароль
+  add_user_screen -> check_password : Проверить пароль\n
+  alt пароль слишком слабый
+    add_user_screen -> error_screen : показать сообщение\n
+    end
+else пароль не был введен
   add_user_screen -> generate_password : сгенерировать\nпароль
-end
-alt введенный или сгенерированный\nсоответствует требованиям
-  add_user_screen -> db : добавить пользователя
-  add_user_screen -> added_info_screen : показать сообщение
-else
-  add_user_screen -> error_screen : показать сообщение
 end
 @enduml

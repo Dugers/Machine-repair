@@ -1,5 +1,7 @@
 @startuml description_order_case
 
+skinparam defaultFontSize 18
+
 actor Работник as worker
 
 entity "База данных" as db

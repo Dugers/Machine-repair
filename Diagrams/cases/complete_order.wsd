@@ -1,5 +1,7 @@
 @startuml complete_order_case
 
+skinparam defaultFontSize 18
+
 actor Рабочий as worker
 
 entity "База данных" as db
@@ -15,7 +17,7 @@ control "Завершить заказ" as close_order #green
 
 active_orders_screen --> show_close_order_screen : "Пользователь выбрал заказ и нажал\nкнопку завершить заказ"
 show_close_order_screen --> close_order_screen
-show_close_order_screen --> show_error : "Заказ уже завершен"
+close_order --> show_error : "Заказ уже завершен"
 close_order_screen --> check_description : "Пользователь нажал завершить заказ"
 check_description --> confirm_close_order_screen : "Описание соответствует требованиям"
 confirm_close_order_screen --> close_order : "Пользователь нажал Да"
@@ -43,4 +45,4 @@ note as scenario
 end note
 
 
-@enduml
+@enduml 

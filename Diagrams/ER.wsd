@@ -1,64 +1,85 @@
 @startuml ER
 
+skinparam defaultFontSize 20
+
 entity users {
-  id: serial PRIMARY KEY
+  id: serial PRIMARY KEY NOT NULL
   --
-  name: text
-  login: text
-  password: text
-  role: user_role
+  name: text NOT NULL
+  login: text UNIQUE NOT NULL
+  password: text NOT NULL
+  role: user_role NOT NULL
 }
 entity machine_types {
-  id: serial PRIMARY KEY
+  id: serial PRIMARY KEY NOT NULL
   --
-  name: text
+  name: text UNIQUE NOT NULL
 }
 
 entity machine_brands {
-  * id: serial PRIMARY KEY
+  id: serial PRIMARY KEY NOT NULL
   --
-  name: text
+  name: text UNIQUE NOT NULL
+}
+
+entity machine_marks {
+  id: serial PRIMARY KEY NOT NULL
+  --
+  type: integer NOT NULL
+  brand: integer NOT NULL
+  --
+  UNIQUE(type, brand)
 }
 
 entity machines {
-  id: serial PRIMARY KEY
+  id: serial PRIMARY KEY NOT NULL
   --
-  name: text
-  owner: serial
-  type_and_brand: serial
-}
-
-entity type_to_brand {
-  id: serial PRIMARY KEY
+  name: text NOT NULL
+  owner: integer NOT NULL
+  mark: integer NOT NULL
   --
-  type: serial
-  brand: serial
-}
-
-entity type_and_brand_to_service{
-  id: serial PRIMARY KEY
-  --
-  service: serial
-  type_and_brand: serial
+  UNIQUE(owner, name)
 }
 
 entity services {
   id: serial PRIMARY KEY
   --
-  name: text
+  name: text UNIQUE NOT NULL
+  duration_months: smallint NOT NULL
+  duration_days: smallint NOT NULL
+  duration_hours: smallint NOT NULL
+  duration_minutes: smallint NOT NULL
+  price: decimal(9, 2) NOT NULL
+}
+
+entity services_marks{
+  id: serial PRIMARY KEY NOT NULL
+  --
+  service: integer NOT NULL
+  mark: integer NOT NULL
+  duration_months: smallint
+  duration_days: smallint
+  duration_hours: smallint
+  duration_minutes: smallint
+  price: decimal(9, 2)
+  --
+  UNIQUE(service, mark)
 }
 
 entity orders {
-  * id: serial PRIMARY KEY
+  id: serial PRIMARY KEY NOT NULL
   --
-  date_start: date
-  date_finish: date
-  complete: boolean DEFAULT false
+  date_start: date NOT NULL DEFAULT CURRENT_DATE
+  date_end: date DEFAULT NULL
+  complete: boolean NOT NULL DEFAULT false
   description: text DEFAULT NULL
-  customer: serial
-  executor: serial DEFAULT NULL
-  machine: serial
-  service: serial
+  customer: integer NOT NULL
+  executor: integer DEFAULT NULL
+  machine: integer NOT NULL
+  service: integer NOT NULL
+  --
+  UNIQUE(customer, machine, service) WHERE
+  complete = false
 }
 
 enum user_role {
@@ -72,12 +93,12 @@ enum user_role {
 
 users||--o{user_role
 users||--o{orders
-machines ||--o{ type_to_brand
+machines ||--o{ machine_marks
 machines ||--o{ users
 orders ||-o{ services
-type_to_brand ||-o{ machine_types
-type_to_brand ||-o{ machine_brands
-type_to_brand |o-|{ type_and_brand_to_service
-services |o-|{ type_and_brand_to_service
+machine_marks ||-o{ machine_types
+machine_marks ||-o{ machine_brands
+machine_marks |o-|{ services_marks
+services |o-|{ services_marks
 
 @enduml

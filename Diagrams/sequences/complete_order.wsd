@@ -1,5 +1,7 @@
 @startuml complete_order_sequence
 
+skinparam defaultFontSize 18
+
 actor Рабочий as worker
 
 boundary "Завершение заказа" as close_order_screen
@@ -10,11 +12,12 @@ boundary "Окно ошибки" as error_screen #red
 
 worker -> close_order_screen : Заполняет описание\nпроделанной работы
 worker -> close_order_screen : Нажимает кнопку\n"Завершить заказ"
-alt Описание подходит требованиям
+alt Описание соответствует требованиям
 close_order_screen -> confirm_close_order_screen : открыть окно
 else Описание слишком короткое
 close_order_screen -> error_screen : показать сообщение
 end
+close_order_screen -> confirm_close_order_screen : запросить подтверждение
 alt действие подтверждено
   confirm_close_order_screen -> db : изменить статус\nзаказа и добавить\nописание
   confirm_close_order_screen -> close_info_screen : показать сообщение

@@ -1,5 +1,7 @@
 @startuml do_order_case
 
+skinparam defaultFontSize 18
+
 actor Клиент as client
 
 entity "База данных" as db
@@ -13,9 +15,9 @@ control "Получить услуги по станку" as get_repairs_by_mach
 control "Создать заказ" as create_order #green
 control "Выдать ошибку" as show_error #red
 
-list_repairs_screen --> get_machines_by_user : "Пользователь кликнул на выбор станка"
-list_repairs_screen --> get_repairs_by_machine : "Пользователь выбрал станок и кликнул на выбор услуги"
-list_repairs_screen --> create_order : "Пользователь выбрал станок, услугу и нажал кнопку заказать"
+list_repairs_screen --> get_machines_by_user : "Пользователь кликнул\nна выбор станка"
+list_repairs_screen --> get_repairs_by_machine : "Пользователь выбрал станок\nи кликнул на выбор услуги"
+list_repairs_screen --> create_order : "Пользователь выбрал станок,\nуслугу и нажал кнопку заказать"
 
 get_repairs_by_machine --> db
 get_machines_by_user --> db

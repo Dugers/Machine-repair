@@ -1,5 +1,7 @@
 @startuml add_user_case
 
+skinparam defaultFontSize 18
+
 actor Администратор as admin
 
 entity "База данных" as db
@@ -7,8 +9,10 @@ entity "База данных" as db
 boundary "Добавление пользователя" as add_user_screen
 
 control "Проверить корректность полей" as check_fields
-control "Сгенерировать логин на основе ФИО" as generate_login
-control "Сгенерировать пароль" as generate_password
+package "Генерация" {
+  control "Сгенерировать логин на основе имени" as generate_login
+  control "Сгенерировать пароль" as generate_password
+}
 control "Добавить пользователя" as add_user
 control "Отобразить ошибку" as show_error #red
 control "Показать пользователю окно с логином и паролем" as show_user #green
@@ -16,6 +20,7 @@ control "Показать пользователю окно с логином и
 admin --> add_user_screen
 add_user_screen --> check_fields : "Пользователь нажал кнопку Добавить"
 check_fields --> add_user : "Поля заполнены корректно"
+check_fields --> show_error : "Поля заполнены не корректно"
 add_user --> generate_login : "Поле с логином пустое"
 add_user --> generate_password : "Поле с паролем пустое"
 generate_login --> db
@@ -29,7 +34,7 @@ note as scenario
     1) Администратор переходит в окно
         добавления пользователя
     2) Заполняет обязательные поля:
-        ФИО пользователя
+        Имя пользователя
         Роль
         Остальные поля заполняются по
         желанию и могут быть сгенерированы

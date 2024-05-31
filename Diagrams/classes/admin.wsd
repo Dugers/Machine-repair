@@ -1,5 +1,7 @@
 @startuml admin_class
 
+skinparam defaultFontSize 18
+
 hide empty members
 
 enum UserRole {
@@ -7,72 +9,78 @@ enum UserRole {
   Client
   Worker
 }
+
 class DB {
-  + DeleteUser (id)
-  + List[Users] GetUsers ()
-  + CreateUser (Users)
-  + EditUser (Users)
+  + bool create_user(User)
+  + bool update_user_name(name)
+  + bool update_user_login(login)
+  + bool update_user_role(role)
+  + bool update_user_password(password)
+  + int get_client_orders_count(user_id)
+  + int get_worker_orders_count(user_id)
+  + User get_user(login)
+  + User get_user(user_id)
+  + List[User] get_users()
+  + delete_user(user_id)
 }
 class AuthWindow {
-  + AuthButtonClick()
-  + UserRole CheckAuth(login, password)
+  + User check_auth(login, password)
+  + on_auth_button_clicked()
+  + open_user_window(role, user_id)
 }
  
-Entity Users
-
-Interface PersonalAreaWindow {
-  + LogoutButtonClick()
-}
+Entity User
 
 class AdminAreaWindow {
-  + AdminAreaWindow(Users)
-  + AddUserButtonClick()
-  + EditUserButtonClick()
-  + LogoutButtonClick()
+  + AdminAreaWindow(user_id)
+  + on_add_user_button_clicked()
+  + on_edit_user_button_clicked()
+  + on_exit_button_clicked()
 }
 
 class ListUsersWindow {
-  + ListUsersWindow(Users)
-  + EditButtonClick()
-  + DeleteButtonClick()
-  + GoToAreaButtonClick()
+  + ListUsersWindow(user_id)
+  + on_go_area_button_clicked()
+  + on_delete_button_clicked()
+  + on_edit_button_clicked()
 }
 
 class EditUserWindow {
-  + EditUserWindow(Users)
-  + UserRoleSelect()
-  + SaveButtonClick()
-  + CheckEdit()
-  + GoToAreaButtonClick()
+  + EditUserWindow(user_id, edited_user_id)
+  + validate()
+  + validate(name, login, password, role)
+  + check_changes(name, login, password, role)
+  + update(name, login, password, role)
+  + on_go_area_button_clicked()
+  + on_add_button_clicked()
+  --
+  * edited_user
 }
 
 class AddUserWindow {
-  + ListUsersWindow(Users)
-  + UserRoleSelect() 
-  + CheckAdd()
-  + string GenerateUserLogin(first_name, second_name, third_name)
-  + string GenerateUserPassword()
-  + GoToAreaButtonClick()
-  + AddButtonClick()
+  + AddUserWindow(user_id)
+  + validate()
+  + validate(name, login, password, role)
+  + User prepare_data()
+  + string generate_login(name)
+  + on_go_area_button_clicked()
+  + on_add_button_clicked()
 }
 
-class DeleteUserWindow {
-  DeleteUserWindow(Users)
-  YesButtonClick()
-  NoButtonClick()
+class ConfirmationDialog {
+  + accept()
+  + reject()
 }
 
 AuthWindow --> DB
-DB --> Users
+DB --> User
 AuthWindow --> UserRole
-AuthWindow <--> PersonalAreaWindow
-AdminAreaWindow --|> PersonalAreaWindow
+AuthWindow <--> AdminAreaWindow
 AdminAreaWindow <--> ListUsersWindow
 AdminAreaWindow <--> AddUserWindow
 EditUserWindow --> AdminAreaWindow
 ListUsersWindow --> EditUserWindow
-ListUsersWindow <--> DeleteUserWindow
-DeleteUserWindow --> AdminAreaWindow
+ListUsersWindow <--> ConfirmationDialog
 
 
 @enduml

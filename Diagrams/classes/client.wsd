@@ -1,5 +1,7 @@
 @startuml client_class
 
+skinparam defaultFontSize 18
+
 hide empty members
 
 enum UserRole {
@@ -7,68 +9,68 @@ enum UserRole {
   Client
   Worker
 }
+
 class DB {
-   + Users GetUserByLogin(login)
-   + List[Machines] GetMachinesByUser(id)
-   + List[Repairs] GetRepairsByMachine(id)
-   + List[Types] GetBrandsTypes()
-   + List[Brands] GetBrandsByType(id)
-   + CreateOrder(Orders)
-   + CreateMachine(Users, Machins)
+   + bool create_machine_mark(type_id, brand_id)
+   + bool create_machine(Machine, user_id, mark_id)
+   + bool create_order(user_id, machine_id, service_id)
+   + MachineMark get_machine_mark(type_id, brand_id)
+   + List[MachineType] get_machine_types()
+   + List[MachineBrand] get_machine_brands(type_id)
+   + List[Machine] get_machines(user_id)
 }
+
 class AuthWindow {
-   + AuthButtonClick()
-   + UserRole CheckAuth(login, password)
+  + User check_auth(login, password)
+  + on_auth_button_clicked()
+  + open_user_window(role, user_id)
 }
-
-Entity Users
-Entity Machines
-Entity Repairs
-Entity Brands
-Entity Types
-
-Interface PersonalAreaWindow {
-  + PersonalAreaWindow(Users)
-  + LogoutButtonClick()
-}
+ 
+Entity User
+Entity Machine
+Entity Service
+Entity MachineBrand
+Entity MachineType
+Entity MachineMark
 
 class ClientAreaWindow {
-  + RepairsButtonClick()
-  + MyMachinesButtonClick()
-  + LogoutButtonClick()
+  + ClientAreaWindow(user_id)
+  + on_list_services_button_clicked()
+  + on_my_machines_button_clicked()
+  + on_exit_button_clicked()
 }
 
 class ClientMachinesWindow {
-  + ClientMachinesWindow(Users)
-  + AddMachineButtonClick()
-  + GoToAreaButtonClick()
+  + ClientMachinesWindow(user_id)
+  + on_add_button_clicked()
+  + on_go_area_button_clicked()
 }
 
 class ClientRepairsWindow {
-  + ClientRepairsWindow(Users)
-  + InputMachineSelect()
-  + InputRepairSelect()
-  + OrderButtonClick()
-  + GoToAreaButtonClick()
+  + ClientRepairsWindow(user_id)
+  + on_order_button_clicked()
+  + on_repair_combo_box_currentIndexChanged(index)
+  + on_machine_combo_box_currentIndexChanged(index)
+  + on_go_area_button_clicked()
 }
 
 class AddMachineWindow {
-  + ClientRepairsWindow(Users)
-  + GoToAreaButtonClick()
-  + InputTypeSelect()
-  + InputBrandSelect()
-  + bool CheckName()
+  + ClientRepairsWindow(user_id)
+  + validate(name, type_id, brand_id)
+  + on_type_combo_box_currentIndexChanged(index)
+  + on_brand_combo_box_currentIndexChanged(index)
+  + on_go_area_button_clicked()
 }
 
 AuthWindow --> DB
-DB --> Users
-DB --> Machines
-DB --> Repairs
-DB --> Brands
-DB --> Types
+DB --> User
+DB --> Machine
+DB --> Service
+DB --> MachineBrand
+DB --> MachineType
+DB --> MachineMark
 AuthWindow --> UserRole
-AuthWindow <--> PersonalAreaWindow
-ClientAreaWindow --|> PersonalAreaWindow
+AuthWindow <--> ClientAreaWindow
 ClientAreaWindow <--> ClientMachinesWindow
 ClientAreaWindow <--> ClientRepairsWindow
 AddMachineWindow --> ClientAreaWindow

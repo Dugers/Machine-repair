@@ -1,5 +1,7 @@
 @startuml worker_class
 
+skinparam defaultFontSize 18
+
 hide empty members
 
 enum UserRole {
@@ -7,89 +9,102 @@ enum UserRole {
   Client
   Worker
 }
+
 class DB {
-  + GetAviableOrders()
-  + GetActiveOrders(Users)
-  + GetOrderById(id)
-  + GetOrderByMachine(Machines)
-  + GetMachineByOrder(Orders)
-  + CompleteOrder(Orders, description)
+  + bool complete_order(order_id, description)
+  + bool update_order_executor(order_id, executor_id)
+  + int get_worker_orders_count(user_id)
+  + User get_user(login)
+  + Machine get_machine(machine_id)
+  + Date get_last_repair_date(machine_id)
+  + Order get_order(order_id)
+  + Machine get_machine_by_order(order_id)
+  + List[Order] get_active_orders(user_id)
+  + List[Order] get_aviable_orders(user_id)
+  + List[Order] get_machine_orders(machine_id)
 }
+
 class AuthWindow {
-  + AuthButtonClick()
-  + UserRole CheckAuth(login, password)
+  + User check_auth(login, password)
+  + on_auth_button_clicked()
+  + open_user_window(role, user_id)
 }
  
-Entity Users
-Entity Repairs
-Entity Machines
-Entity Orders
-
-Interface PersonalAreaWindow {
-  + PersonalAreaWindow(Users)
-  + LogoutButtonClick()
-}
+Entity User
+Entity Machine
+Entity Order
 
 class WorkerAreaWindow {
-  + WorkerAreaWindow(Users)
-  + AviableOrdersButtonClick()
-  + ActiveOrdersButtonClick()
-  + LogoutButtonClick()
+  + WorkerAreaWindow(user_id)
+  + on_aviable_orders_list_button_clicked()
+  + on_active_orders_list_button_clicked()
+  + on_exit_button_clicked()
 }
 
 class AviableOrdersListWindow {
-  + AviableOrdersListWindow(Users)
-  + TakeOrderButtonClick()
-  + AboutOrderButtonClick()
-  + GoToAreaButtonClick()
+  + AviableOrdersListWindow(user_id)
+  + on_take_order_button_clicked()
+  + on_about_button_clicked()
+  + on_go_area_button_clicked()
+  --
+  * List[Order] orders
 }
 
 class ActiveOrdersListWindow {
-  + ActiveOrdersListWindow(Users)
-  + CompleteOrderButtonClick()
-  + AboutOrderButtonClick()
-  + GoToAreaButtonClick()
+  + ActiveOrdersListWindow(user_id)
+  + on_complete_order_button_clicked()
+  + on_about_button_clicked()
+  + on_go_area_button_clicked()
+  --
+  * List[Order] orders
 }
 
-class FinishOrderWindow {
-  + FinishOrderWindow(Orders, description)
-  + CompleteOrderButtonClick()
-  + GoToAreaButtonClick()
+class CompleteOrderWindow {
+  + CompleteOrderWindow(user_id, order_id)
+  + static validate_description(description)
+  + on_complete_order_button_clicked()
+  + on_go_area_button_clicked()
+  --
+  * order_id
 }
 
-class ConfirmFinishOrderWindow {
-  + ConfirmFinishOrderWindow(Orders, description)
-  + YesButtonClick()
-  + NoButtonClick()
+class ConfirmationDialog {
+  + accept()
+  + reject()
 }
 
 class AboutOrderWindow {
-  + AboutOrderWindow(Orders)
-  + AboutMachineButtonClick()
-  + GoToAreaButtonClick()
+  + AboutOrderWindow(user_id, order_id)
+  + hide_description()
+  + on_about_machine_button_clicked()
+  + on_go_area_button_clicked()
+  --
+  * order
 }
 
 class AboutMachineWindow {
-  + AboutMachineWindow(Machines)
-  + HistoryRepairsButtonClick()
-  + GoToAreaButtonClick()
+  + AboutMachineWindow(user_id, machine_id)
+  + on_order_button_clicked()
+  + on_go_area_button_clicked()
+  --
+  * machine_id
 }
 
 class ListRepairsMachineWindow {
-  + ListRepairsMachineWindow(Machines)
-  + AboutOrderButtonClick()
-  + GoToAreaButtonClick()
+  + ListRepairsMachineWindow(user_id, machine_id)
+  + on_about_button_clicked()
+  + on_go_area_button_clicked()
+  --
+  * List[Order] orders
 }
 
 
 AuthWindow --> DB
-DB --> Users
-DB --> Repairs
-DB --> Machines
-DB --> Orders
+DB --> User
+DB --> Machine
+DB --> Order
 AuthWindow --> UserRole
-AuthWindow <--> PersonalAreaWindow
-WorkerAreaWindow --|> PersonalAreaWindow
+AuthWindow <--> WorkerAreaWindow
 WorkerAreaWindow <--> AviableOrdersListWindow
 WorkerAreaWindow <--> ActiveOrdersListWindow
 AboutMachineWindow --> WorkerAreaWindow
@@ -100,13 +115,12 @@ AboutOrderWindow --> AboutMachineWindow
 AboutMachineWindow --> ListRepairsMachineWindow
 ListRepairsMachineWindow --> WorkerAreaWindow
 ListRepairsMachineWindow --> AboutOrderWindow
-ListRepairsMachineWindow --> FinishOrderWindow
-FinishOrderWindow --> WorkerAreaWindow
-FinishOrderWindow --> ConfirmFinishOrderWindow
-ConfirmFinishOrderWindow --> WorkerAreaWindow
+ListRepairsMachineWindow --> CompleteOrderWindow
+CompleteOrderWindow --> WorkerAreaWindow
+CompleteOrderWindow <--> ConfirmationDialog
 AviableOrdersListWindow --> DB
 ActiveOrdersListWindow --> DB
-ConfirmFinishOrderWindow --> DB
+CompleteOrderWindow --> DB
 AboutMachineWindow --> DB
 AboutOrderWindow --> DB
 ListRepairsMachineWindow --> DB

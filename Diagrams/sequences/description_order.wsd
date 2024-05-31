@@ -1,5 +1,7 @@
 @startuml description_order_sequence
 
+skinparam defaultFontSize 18
+
 actor Работник as worker
 
 boundary "Окно" as window_screen
@@ -9,7 +11,7 @@ boundary "Окно ошибки" as error_screen #red
 entity "База данных" as db
 
 ref over worker, window_screen
-Открыто "Окно":
+Открыто одно из окон:
 Список доступных заказов
 Список активных заказов
 Список работ для станка

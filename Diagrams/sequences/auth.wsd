@@ -1,5 +1,7 @@
 @startuml auth_sequence
 
+skinparam defaultFontSize 18
+
 actor "Пользователь" as user
 
 boundary "Окно авторизации" as auth_screen

@@ -2,6 +2,8 @@
 
 left to right direction
 
+skinparam defaultFontSize 18
+
 package Сотрудники {
   actor "Рабочий" as worker
   actor "Администратор" as admin

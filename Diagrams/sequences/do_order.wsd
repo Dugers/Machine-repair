@@ -1,5 +1,7 @@
 @startuml do_order_sequence
 
+skinparam defaultFontSize 18
+
 actor Клиент as client
 
 boundary "Список ремонтных работ" as list_repairs_screen
